@@ -1,0 +1,24 @@
+# $Id: ProblemThatActivityIsInvokedTwiceUnexpectedly.yaml 215 2006-07-22 02:01:23Z iteman $
+firstState: DisplayForm
+viewState:
+  - name: DisplayForm
+    view: Form
+    activity:
+      class: Piece_FlowProblemThatActivityIsInvokedTwiceUnexpectedlyAction
+      method: setupForm
+    transition:
+      - event: confirmForm
+        nextState: processConfirmForm
+        action:
+          class: Piece_FlowProblemThatActivityIsInvokedTwiceUnexpectedlyAction
+          method: validate
+  - name: DisplayConfirmation
+    view: Confirmation
+    activity:
+      class: Piece_FlowProblemThatActivityIsInvokedTwiceUnexpectedlyAction
+      method: setupConfirmation
+actionState:
+  - name: processConfirmForm
+    transition:
+      - event: goDisplayConfirmation
+        nextState: DisplayConfirmation

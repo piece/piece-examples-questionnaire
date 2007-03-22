@@ -1,0 +1,32 @@
+<div class="page_title">
+アンケート情報の入力３
+</div>
+
+<div class="main">
+  <div class="left">■Form3</div>
+  <div class="right">
+    <div class="midasi">あなたの興味のあるテーマは何ですか？（複数回答可）</div>
+    <div class="err_msg" flexy:if="__Answer3Results.isError(#theme#)">{__Answer3Results.getErrorMessage(#theme#)}</div>
+    <form name="Form3">
+      <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+      <table>
+        <tr>
+          <td>
+            <input type="checkbox" name="theme[]" value="スポーツ" />スポーツ<br />
+            <input type="checkbox" name="theme[]" value="政治・経済" />政治・経済<br />
+            <input type="checkbox" name="theme[]" value="芸術" />芸術<br />
+            <input type="checkbox" name="theme[]" value="健康" />健康<br />
+            <input type="checkbox" name="theme[]" value="IT関連" />IT関連<br />
+            <input type="checkbox" name="theme[]" value="その他" />その他
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="button">
+            <input type="submit" name="{__eventNameKey}_goDisplayForm2FromDisplayForm3" value="戻る" />&nbsp;
+            <input type="submit" name="{__eventNameKey}_answer3" value="確認画面へ" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>

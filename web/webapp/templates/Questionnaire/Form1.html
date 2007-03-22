@@ -1,0 +1,30 @@
+<div class="page_title">
+  アンケート情報の入力１
+</div>
+
+<div class="main">
+  <div class="left">■Form1</div>
+  <div class="right">
+    <div class="midasi">お名前とE-Mailを入力してください</div>
+    <div class="err_msg" flexy:if="__Answer1Results.isError(#name#)">{__Answer1Results.getErrorMessage(#name#)}</div>
+    <div class="err_msg" flexy:if="__Answer1Results.isError(#email#)">{__Answer1Results.getErrorMessage(#email#)}</div>
+    <form name="Form1">
+      <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+      <table>
+        <tr>
+          <td>お名前：</td>
+          <td><input type="text" name="name" /></td>
+        </tr>
+        <tr>
+          <td>E-Mail：</td>
+          <td><input type="text" name="email" /></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="button">
+            <input type="submit" name="{__eventNameKey}_answer1" value="次へ" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>

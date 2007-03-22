@@ -1,0 +1,37 @@
+<div class="page_title">
+  アンケート情報の入力２
+</div>
+
+<div class="main">
+  <div class="left">■Form2</div>
+  <div class="right">
+    <div class="midasi">性別と職業を選択してください</div>
+    <div class="err_msg" flexy:if="__Answer2Results.isError(#sex#)">{__Answer2Results.getErrorMessage(#sex#)}</div>
+    <div class="err_msg" flexy:if="__Answer2Results.isError(#job#)">{__Answer2Results.getErrorMessage(#job#)}</div>
+    <form name="Form2">
+      <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+      <table>
+        <tr>
+          <td>性別：</td>
+          <td>
+            <input type="radio" id="sex_1" name="sex" value="男性" />男性&nbsp;
+            <input type="radio" id="sex_2" name="sex" value="女性" />女性
+          </td>
+        </tr>
+        <tr>
+          <td>職業：</td>
+          <td>
+            <select name="job">
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="button">
+            <input type="submit" name="{__eventNameKey}_goDisplayForm1FromDisplayForm2" value="戻る" />&nbsp;
+            <input type="submit" name="{__eventNameKey}_answer2" value="次へ" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>

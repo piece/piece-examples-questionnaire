@@ -1,0 +1,14 @@
+# $Id: Authentication.yaml 728 2007-02-19 08:57:58Z iteman $
+- name: login_name
+  required:
+  validator:
+    - name: Length
+      rule:
+        min: 6
+        max: 255
+- name: password
+  required:
+  validator:
+    - name: Regex
+      rule:
+        pattern: "/^[a-zA-Z0-9]{6,255}$/"

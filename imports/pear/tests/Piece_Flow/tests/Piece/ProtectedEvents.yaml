@@ -1,0 +1,10 @@
+# $Id: ProtectedEvents.yaml 215 2006-07-22 02:01:23Z iteman $
+firstState: Stop
+viewState:
+  - name: Stop
+    view: Stop
+    transition:
+      - event: _Piece_Flow_Protected_Event
+        nextState: Playing
+  - name: Playing
+    view: Playing

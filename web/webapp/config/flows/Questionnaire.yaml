@@ -1,0 +1,125 @@
+# $Id$
+
+######################################################################
+# Copyright (c) 2006-2007 Piece Project, All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+######################################################################
+
+firstState: DisplayForm1
+
+lastState: { name: DisplayFinish, view: Finish }
+
+viewState:
+
+  - name: DisplayForm1
+    view: Form1
+    activity:
+      class: QuestionnaireAction
+      method: setupForm1
+    transition:
+      - event: answer1
+        nextState: ProcessAnswer1
+        action:
+          class: QuestionnaireAction
+          method: validateAnswer1
+
+  - name: DisplayForm2
+    view: Form2
+    activity:
+      class: QuestionnaireAction
+      method: setupForm2
+    transition:
+      - event: answer2
+        nextState: ProcessAnswer2
+        action:
+          class: QuestionnaireAction
+          method: validateAnswer2
+      - event: goDisplayForm1FromDisplayForm2
+        nextState: DisplayForm1   
+
+  - name: DisplayForm3
+    view: Form3
+    activity:
+      class: QuestionnaireAction
+      method: setupForm3
+    transition:
+      - event: answer3
+        nextState: ProcessAnswer3
+        action:
+          class: QuestionnaireAction
+          method: validateAnswer3
+      - event: goDisplayForm2FromDisplayForm3
+        nextState: DisplayForm2
+
+  - name: DisplayConfirmation
+    view: Confirmation
+    activity:
+      class: QuestionnaireAction
+      method: setupConfirmation
+    transition:
+      - event: goDisplayForm1FromDisplayConfirmation
+        nextState: DisplayForm1
+      - event: goDisplayForm2FromDisplayConfirmation
+        nextState: DisplayForm2
+      - event: goDisplayForm3FromDisplayConfirmation
+        nextState: DisplayForm3
+      - event: register
+        nextState: ProcessRegister
+        action:
+          class: QuestionnaireAction
+          method: registerAnswer
+
+actionState:
+
+  - name: ProcessAnswer1
+    transition:
+      - event: goDisplayForm2FromProcessAnswer1
+        nextState: DisplayForm2
+      - event: goDisplayForm1FromProcessAnswer1
+        nextState: DisplayForm1
+
+  - name: ProcessAnswer2
+    transition:
+      - event: goDisplayForm3FromProcessAnswer2
+        nextState: DisplayForm3
+      - event: goDisplayForm2FromProcessAnswer2
+        nextState: DisplayForm2
+
+  - name: ProcessAnswer3
+    transition:
+      - event: goDisplayConfirmationFromProcessAnswer3
+        nextState: DisplayConfirmation
+      - event: goDisplayForm3FromProcessAnswer3
+        nextState: DisplayForm3
+
+  - name: ProcessRegister
+    transition:
+      - event: goDisplayFinishFromProcessRegister
+        nextState: DisplayFinish
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 2
+# indent-tabs-mode: nil
+# End:

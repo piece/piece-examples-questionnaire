@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: OmitClassName.xml 253 2006-11-13 14:06:28Z iteman $ -->
+<flow firstState="DisplayForm">
+  <initial method="initialize"/>
+  <viewState name="DisplayForm" view="Form"/>
+</flow>

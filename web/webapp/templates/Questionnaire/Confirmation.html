@@ -1,0 +1,33 @@
+<div class="page_title">
+アンケート入力の確認
+</div>
+
+<div class="main">
+  <div class="left">■Confirmation</div>
+  <div class="right">
+    <div class="midasi">入力内容を確認してください</div>
+    <form name="Confirmation">
+      <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+      <table>
+        <tr><td>お名前：</td><td>{questionnaireAnswer.name}</td></tr>
+        <tr><td>E-Mail：</td><td>{questionnaireAnswer.email}</td></tr>
+        <tr><td>性別：</td><td>{questionnaireAnswer.sex}</td></tr>
+        <tr><td>職業：</td><td>{questionnaireAnswer.job}</td></tr>
+        <tr>
+          <td>興味のあるテーマ：</td>
+          <td>
+            <span flexy:foreach="questionnaireAnswer.theme,theme">{theme}&nbsp;&nbsp;</span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="button">
+            <a href="{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=goDisplayForm1FromDisplayConfirmation"> Form1 に戻る </a><br />
+            <a href="{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=goDisplayForm2FromDisplayConfirmation"> Form2 に戻る </a><br />
+            <a href="{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=goDisplayForm3FromDisplayConfirmation"> Form3 に戻る </a><br />
+            <a href="{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=register"> 回答する </a>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>

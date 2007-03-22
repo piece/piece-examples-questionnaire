@@ -1,0 +1,92 @@
+#!/bin/bash
+# $Id$
+
+TARGET_HOST='examples.piece-framework.com'
+TARGET_PATH='/data/www//data/www/piece-examples/questionnaire'
+THIS_DIRECTORY=`pwd`
+EXCLUDE_FILE="$THIS_DIRECTORY/rsync-exclude-list.txt"
+FILE_PERMISSION=660
+DIRECTORY_PERMISSION=2770
+XARGS_COMMAND='xargs -r'
+GROUP=piece-web
+
+function syncup {
+    pushd ../$1
+
+    OPTION=''
+    if [ "x$DELETE" != 'x' ]; then
+        echo "Notice: rsync オプション $DELETE を使用します"
+        OPTION="$OPTION $DELETE"
+    fi
+
+    rsync -T /tmp -rltvzbu --exclude-from="$EXCLUDE_FILE" $OPTION --suffix=.bak -e ssh . $TARGET_HOST:$TARGET_PATH/$1
+    ssh $TARGET_HOST "find $TARGET_PATH/$1 -type d ! -perm $DIRECTORY_PERMISSION | $XARGS_COMMAND chmod $DIRECTORY_PERMISSION"
+    ssh $TARGET_HOST "find $TARGET_PATH/$1 -type f ! -perm $FILE_PERMISSION | $XARGS_COMMAND chmod $FILE_PERMISSION"
+    ssh $TARGET_HOST "find $TARGET_PATH/$1 ! -group $GROUP | $XARGS_COMMAND chgrp $GROUP"
+
+    popd
+}
+
+function syncup_all {
+    syncup imports
+    syncup web
+}
+
+TARGET='all'
+DELETE=''
+
+while getopts ':t:dlh' OPT; do
+    case $OPT in
+    't')
+        TARGET=$OPTARG
+        ;;
+    'd')
+        DELETE='--delete'
+        ;;
+    'l')
+        cat <<EOF
+Targets:
+  web     - Web アプリケーション
+  imports - 外部ライブラリ
+  all     - すべて
+EOF
+        exit 1
+        ;;
+    'h')
+        cat <<EOF
+Usage: $0 [OPTIONS]
+Options:
+  -t <target> 転送対象コンポーネントを指定します
+  -d          送信側に存在しない、受信側にあるファイルを削除します
+  -l          コンポーネントのリストを表示します
+  -h          ヘルプを表示して終了します
+EOF
+        exit 1
+        ;;
+    esac
+done
+
+echo "転送先ホスト => $TARGET_HOST"
+echo "転送先パス   => $TARGET_PATH"
+
+case $TARGET in
+'all')
+    syncup_all
+    ;;
+'imports'|'web')
+    syncup $TARGET
+    ;;
+*)
+    echo "エラー: ターゲット [$TARGET] は有効な値ではありません"
+    exit 1
+    ;;
+esac
+
+exit 0
+
+# Local Variables:
+# mode: shell-script
+# coding: shift_jis
+# tab-width: 4
+# indent-tabs-mode: nil
+# End:
