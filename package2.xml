@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<package packagerversion="1.5.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Piece_Examples_Questionnaire</name>
+ <channel>pear.piece-framework.com</channel>
+ <summary>Piece Framework questionnaire example</summary>
+ <description>Piece_Examples_Questionnaire is an example application with Piece Framework.
+
+Piece_Examples_Questionnaire is a simple questionnaire application using wizard-style page flow that consists of three questionnaire form, a confirmation page, and a finish page.</description>
+ <lead>
+  <name>KUBO Atsuhiro</name>
+  <user>iteman</user>
+  <email>iteman@users.sourceforge.net</email>
+  <active>yes</active>
+ </lead>
+ <date>2007-03-24</date>
+ <time>01:36:48</time>
+ <version>
+  <release>0.1.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+ <notes>The first release of Piece_Unity.</notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <dir name="docs">
+    <file name="LICENSE" role="doc">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+    <file name="questionnaire.jude" role="doc">
+    </file>
+   </dir> <!-- /docs -->
+   <dir name="web">
+    <dir name="htdocs">
+     <dir name="css">
+      <file name="style.css" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /web/htdocs/css -->
+     <file name="questionnaire.php" role="data">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+    </dir> <!-- /web/htdocs -->
+    <dir name="webapp">
+     <dir name="actions">
+      <file name="QuestionnaireAction.php" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /web/webapp/actions -->
+     <dir name="cache">
+      <dir name="flows">
+       <file name="README" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /web/webapp/cache/flows -->
+      <dir name="validations">
+       <file name="README" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /web/webapp/cache/validations -->
+      <file name="README" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /web/webapp/cache -->
+     <dir name="compiled-templates">
+      <file name="README" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /web/webapp/compiled-templates -->
+     <dir name="config">
+      <dir name="flows">
+       <file name="Questionnaire.yaml" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /web/webapp/config/flows -->
+      <dir name="validations">
+       <file name="Answer1.yaml" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Answer2.yaml" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Answer3.yaml" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /web/webapp/config/validations -->
+      <file name="piece-unity-config.yaml" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /web/webapp/config -->
+     <dir name="sessions">
+      <file name="README" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /web/webapp/sessions -->
+     <dir name="templates">
+      <dir name="Layout">
+       <file name="Layout.html" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /web/webapp/templates/Layout -->
+      <dir name="Questionnaire">
+       <file name="Confirmation.html" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Finish.html" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Form1.html" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Form2.html" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Form3.html" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /web/webapp/templates/Questionnaire -->
+     </dir> <!-- /web/webapp/templates -->
+    </dir> <!-- /web/webapp -->
+   </dir> <!-- /web -->
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.3</min>
+   </pearinstaller>
+   <package>
+    <name>Piece_Unity</name>
+    <channel>pear.piece-framework.com</channel>
+    <min>0.11.0</min>
+   </package>
+   <package>
+    <name>HTML_Template_Flexy</name>
+    <channel>pear.php.net</channel>
+    <min>1.2.5</min>
+   </package>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2007-03-24</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>The first release of Piece_Unity.</notes>
+  </release>
+ </changelog>
+</package>
