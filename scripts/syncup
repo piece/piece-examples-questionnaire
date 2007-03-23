@@ -1,10 +1,11 @@
 #!/bin/bash
 # $Id$
 
-TARGET_HOST='examples.piece-framework.com'
-TARGET_PATH='/data/www//data/www/piece-examples/questionnaire'
+TARGET_HOST='example.piece-framework.com'
+TARGET_PATH='/data/www/piece-examples/questionnaire'
 THIS_DIRECTORY=`pwd`
 EXCLUDE_FILE="$THIS_DIRECTORY/rsync-exclude-list.txt"
+INCLUDE_FILE="$THIS_DIRECTORY/rsync-include-list.txt"
 FILE_PERMISSION=660
 DIRECTORY_PERMISSION=2770
 XARGS_COMMAND='xargs -r'
@@ -19,7 +20,7 @@ function syncup {
         OPTION="$OPTION $DELETE"
     fi
 
-    rsync -T /tmp -rltvzbu --exclude-from="$EXCLUDE_FILE" $OPTION --suffix=.bak -e ssh . $TARGET_HOST:$TARGET_PATH/$1
+    rsync -T /tmp -rltvzbu --exclude-from="$EXCLUDE_FILE" --include-from="$INCLUDE_FILE" $OPTION --suffix=.bak -e ssh . $TARGET_HOST:$TARGET_PATH/$1
     ssh $TARGET_HOST "find $TARGET_PATH/$1 -type d ! -perm $DIRECTORY_PERMISSION | $XARGS_COMMAND chmod $DIRECTORY_PERMISSION"
     ssh $TARGET_HOST "find $TARGET_PATH/$1 -type f ! -perm $FILE_PERMISSION | $XARGS_COMMAND chmod $FILE_PERMISSION"
     ssh $TARGET_HOST "find $TARGET_PATH/$1 ! -group $GROUP | $XARGS_COMMAND chgrp $GROUP"
