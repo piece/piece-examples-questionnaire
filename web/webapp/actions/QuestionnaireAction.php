@@ -32,7 +32,8 @@
  * @copyright  2006-2007 Piece Project
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/
+ * @link       http://pear.piece-framework.com/index.php?package=Piece_Examples_Questionnaire
+ * @link       http://example.piece-framework.com/questionnaire/
  * @since      File available since Release 0.1.0
  */
 
@@ -48,7 +49,8 @@ require_once 'Piece/Flow/Action.php';
  * @copyright  2006-2007 Piece Project
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/
+ * @link       http://pear.piece-framework.com/index.php?package=Piece_Examples_Questionnaire
+ * @link       http://example.piece-framework.com/questionnaire/
  * @since      Class available since Release 0.1.0
  */
 class QuestionnaireAction extends Piece_Flow_Action
