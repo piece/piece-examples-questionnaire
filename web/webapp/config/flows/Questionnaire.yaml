@@ -34,25 +34,21 @@ viewState:
   - name: DisplayForm1
     view: Form1
     activity:
-      class: QuestionnaireAction
       method: setupForm1
     transition:
       - event: answer1
         nextState: ProcessAnswer1
         action:
-          class: QuestionnaireAction
           method: validateAnswer1
 
   - name: DisplayForm2
     view: Form2
     activity:
-      class: QuestionnaireAction
       method: setupForm2
     transition:
       - event: answer2
         nextState: ProcessAnswer2
         action:
-          class: QuestionnaireAction
           method: validateAnswer2
       - event: goDisplayForm1FromDisplayForm2
         nextState: DisplayForm1   
@@ -60,13 +56,11 @@ viewState:
   - name: DisplayForm3
     view: Form3
     activity:
-      class: QuestionnaireAction
       method: setupForm3
     transition:
       - event: answer3
         nextState: ProcessAnswer3
         action:
-          class: QuestionnaireAction
           method: validateAnswer3
       - event: goDisplayForm2FromDisplayForm3
         nextState: DisplayForm2
@@ -74,7 +68,6 @@ viewState:
   - name: DisplayConfirmation
     view: Confirmation
     activity:
-      class: QuestionnaireAction
       method: setupConfirmation
     transition:
       - event: goDisplayForm1FromDisplayConfirmation
@@ -86,7 +79,6 @@ viewState:
       - event: register
         nextState: ProcessRegister
         action:
-          class: QuestionnaireAction
           method: registerAnswer
 
 actionState:
