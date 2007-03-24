@@ -16,10 +16,10 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2007-03-24</date>
- <time>01:36:48</time>
+ <date>2007-03-25</date>
+ <time>06:55:27</time>
  <version>
-  <release>0.1.0</release>
+  <release>0.2.0</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -27,7 +27,9 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
   <api>beta</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>The first release of Piece_Examples_Questionnaire.</notes>
+ <notes>A new release of Piece_Examples_Questionnaire is now available.
+
+This release includes an enhancement so as to remove all class elements from Questionnaire.yaml.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="docs">
@@ -150,6 +152,21 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.2.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2007-03-25</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Examples_Questionnaire is now available.
+
+This release includes an enhancement so as to remove all class elements from Questionnaire.yaml.</notes>
+  </release>
   <release>
    <version>
     <release>0.1.0</release>

@@ -43,11 +43,13 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '0.1.0';
+$releaseVersion = '0.2.0';
 $apiVersion = '0.1.0';
 $apiStability = 'beta';
 $releaseStability = 'beta';
-$notes = 'The first release of Piece_Examples_Questionnaire.';
+$notes = 'A new release of Piece_Examples_Questionnaire is now available.
+
+This release includes an enhancement so as to remove all class elements from Questionnaire.yaml.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
