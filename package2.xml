@@ -27,7 +27,7 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
   <api>beta</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>The first release of Piece_Unity.</notes>
+ <notes>The first release of Piece_Examples_Questionnaire.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="docs">
@@ -161,7 +161,7 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
    </stability>
    <date>2007-03-24</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
-   <notes>The first release of Piece_Unity.</notes>
+   <notes>The first release of Piece_Examples_Questionnaire.</notes>
   </release>
  </changelog>
 </package>

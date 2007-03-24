@@ -47,7 +47,7 @@ $releaseVersion = '0.1.0';
 $apiVersion = '0.1.0';
 $apiStability = 'beta';
 $releaseStability = 'beta';
-$notes = 'The first release of Piece_Unity.';
+$notes = 'The first release of Piece_Examples_Questionnaire.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
