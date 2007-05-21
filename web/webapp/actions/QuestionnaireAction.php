@@ -90,7 +90,7 @@ class QuestionnaireAction extends Piece_Flow_Action
     {
         $this->_setupForm('Answer2');
         $elements = $this->_getFormElements();
-        $elements['job']['_options'] = array('-' => '選択してください',
+        $elements['job']['_options'] = array('' => '選択してください',
                                              '会社員' => '会社員',
                                              '公務員' => '公務員',
                                              '自営業' => '自営業',
