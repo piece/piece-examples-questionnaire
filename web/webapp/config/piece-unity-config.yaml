@@ -52,14 +52,7 @@
       type: extension
       value:
         - Interceptor_NullByteAttackPreventation
-        - Interceptor_ProxyBasePath
         - Interceptor_SessionStart
-
-- name: Root
-  point:
-    - name: configurator
-      type: extension
-      value: ConfiguratorChain
 
 - name: Configurator_Validation
   point:
@@ -70,7 +63,7 @@
       type: configuration
       value: ../webapp/cache/validations
 
-- name: Configurator_Env
+- name: Configurator_Proxy
   point:
     - name: proxyPath
       type: configuration
