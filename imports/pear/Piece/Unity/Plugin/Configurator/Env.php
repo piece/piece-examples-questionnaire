@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Env.php 728 2007-02-19 08:57:58Z iteman $
+ * @version    SVN: $Id: Env.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.11.0
  */
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.11.0
  */
@@ -83,7 +83,11 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $this->_context->setProxyPath($this->getConfiguration('proxyPath'));
+        $proxyPath = $this->_getConfiguration('proxyPath');
+        if (!is_null($proxyPath)) {
+            $this->_context->setProxyPath($proxyPath);
+        }
+
         $this->_setNonSSLableServers();
     }
 
@@ -113,7 +117,7 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
      */
     function _setNonSSLableServers()
     {
-        $nonSSLableServers = $this->getConfiguration('nonSSLableServers');
+        $nonSSLableServers = $this->_getConfiguration('nonSSLableServers');
         if (!is_array($nonSSLableServers)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

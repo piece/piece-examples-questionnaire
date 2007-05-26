@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: PHP.php 701 2007-01-20 18:42:27Z iteman $
+ * @version    SVN: $Id: PHP.php 786 2007-05-23 02:30:39Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.1.0
  */
@@ -49,7 +49,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.1.0
  */
@@ -106,52 +106,46 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     function _doRender($isLayout)
     {
         if (!$isLayout) {
-            $templateDirectory = $this->getConfiguration('templateDirectory');
+            $templateDirectory = $this->_getConfiguration('templateDirectory');
             $view = $this->_context->getView();
         } else {
-            $templateDirectory = $this->getConfiguration('layoutDirectory');
-            $view = $this->getConfiguration('layoutView');
+            $templateDirectory = $this->_getConfiguration('layoutDirectory');
+            $view = $this->_getConfiguration('layoutView');
         }
 
         if (is_null($templateDirectory)) {
             return;
         }
 
-        $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->getConfiguration('templateExtension');
+        $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension');
 
         if (!file_exists($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
                                    "The HTML template file [ $file ] not found.",
-                                    'warning',
+                                    'exception',
                                     array('plugin' => __CLASS__)
                                    );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
         if (!is_readable($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
+            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
                                    "The HTML template file [ $file ] was not readable.",
-                                    'warning',
+                                    'exception',
                                     array('plugin' => __CLASS__)
                                    );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
         $viewElement = &$this->_context->getViewElement();
         extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
-        if (!include_once $file) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+        if (!include $file) {
+            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
                                     'The HTML template file [ $file ] not found or was not readable.',
-                                    'warning',
+                                    'exception',
                                     array('plugin' => __CLASS__)
                                     );
-            Piece_Unity_Error::popCallback();
         }
     }
 
@@ -164,7 +158,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     function _prepareFallback()
     {
         $config = &$this->_context->getConfiguration();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->getConfiguration('fallbackDirectory'));
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->_getConfiguration('fallbackDirectory'));
     }
  
     /**#@-*/

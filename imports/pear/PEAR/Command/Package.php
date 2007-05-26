@@ -18,7 +18,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Package.php,v 1.122 2006/06/07 23:38:14 pajoye Exp $
+ * @version    CVS: $Id: Package.php,v 1.122.2.1 2007/04/09 02:37:43 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -38,7 +38,7 @@ require_once 'PEAR/Command/Common.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -191,7 +191,12 @@ List all dependencies the package has.'
             'summary' => 'Sign a package distribution file',
             'function' => 'doSign',
             'shortcut' => 'si',
-            'options' => array(),
+            'options' => array(
+                'verbose' => array(
+                    'shortopt' => 'v',
+                    'doc' => 'Display GnuPG output',
+                    ),
+            ),
             'doc' => '<package-file>
 Signs a package distribution (.tar or .tgz) file with GnuPG.',
             ),
@@ -710,7 +715,13 @@ used for automated conversion or learning the format.
         $input = $this->ui->userDialog($command,
                                        array('GnuPG Passphrase'),
                                        array('password'));
-        $gpg = popen("gpg --batch --passphrase-fd 0 --armor --detach-sign --output $tmpdir/package.sig $tmpdir/$packagexml 2>/dev/null", "w");
+        if (!isset($input[0])) {
+            //use empty passphrase
+            $input[0] = '';
+        }
+
+        $devnull = (isset($options['verbose'])) ? '' : ' 2>/dev/null';
+        $gpg = popen("gpg --batch --passphrase-fd 0 --armor --detach-sign --output $tmpdir/package.sig $tmpdir/$packagexml" . $devnull, "w");
         if (!$gpg) {
             return $this->raiseError("gpg command failed");
         }

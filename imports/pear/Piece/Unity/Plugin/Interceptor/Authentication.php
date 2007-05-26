@@ -32,7 +32,7 @@
  * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Authentication.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: Authentication.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.9.0
  */
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  */
@@ -87,12 +87,12 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function invoke()
     {
-        foreach ($this->getConfiguration('services') as $service) {
+        foreach ($this->_getConfiguration('services') as $service) {
             if (!$this->_isProtectedResource(@$service['resources'])) {
                 continue;
             }
 
-            $guardDirectory = $this->getConfiguration('guardDirectory');
+            $guardDirectory = $this->_getConfiguration('guardDirectory');
             if (is_null($guardDirectory)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                         'The guard directory was not specified.'

@@ -15,7 +15,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Dependency2.php,v 1.54 2007/02/13 04:16:25 cellog Exp $
+ * @version    CVS: $Id: Dependency2.php,v 1.55 2007/03/21 06:10:46 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -37,7 +37,7 @@ require_once 'PEAR/Validate.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -525,7 +525,7 @@ class PEAR_Dependency2
      */
     function getPEARVersion()
     {
-        return '1.5.1';
+        return '1.5.4';
     }
 
     function validatePearinstallerDependency($dep)
@@ -879,7 +879,11 @@ class PEAR_Dependency2
             }
             if (isset($badpackages[$memyselfandI]['errors'])) {
                 foreach ($badpackages[$memyselfandI]['errors'] as $error) {
-                    $dl->log(0, $error->getMessage());
+                    if (is_array($error)) {
+                        $dl->log(0, $error[0]);
+                    } else {
+                        $dl->log(0, $error->getMessage());
+                    }
                 }
                 if (isset($this->_options['nodeps']) || isset($this->_options['force'])) {
                     return $this->warning(
@@ -1019,7 +1023,11 @@ class PEAR_Dependency2
             }
             if (isset($badpackages[$memyselfandI]['errors'])) {
                 foreach ($badpackages[$memyselfandI]['errors'] as $error) {
-                    $dl->log(0, $error->getMessage());
+                    if (is_array($error)) {
+                        $dl->log(0, $error[0]);
+                    } else {
+                        $dl->log(0, $error->getMessage());
+                    }
                 }
                 if (isset($this->_options['nodeps']) || isset($this->_options['force'])) {
                     return $this->warning(

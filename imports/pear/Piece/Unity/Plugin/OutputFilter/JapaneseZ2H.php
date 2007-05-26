@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: JapaneseZ2H.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: JapaneseZ2H.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.6.0
  */
@@ -42,14 +42,14 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_OutputFilter_JapaneseZ2H
 
 /**
- * An output filter which can be used to converts Japanese JIS X0208 kana to
+ * An output filter which can be used to convert Japanese JIS X0208 kana to
  * JIS X0201 kana.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.6.0
  */
@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_OutputFilter_JapaneseZ2H extends Piece_Unity_Plugin_Com
      */
     function invoke($buffer)
     {
-        if ($this->getConfiguration('enabled')) {
+        if ($this->_getConfiguration('enabled')) {
             return mb_convert_kana($buffer, 'k');
         }
 

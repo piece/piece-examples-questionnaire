@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: SessionTestCase.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: SessionTestCase.php 744 2007-03-07 11:18:23Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Session
  * @since      File available since Release 0.2.0
@@ -52,7 +52,7 @@ require_once dirname(__FILE__) . '/SessionTestCase/Loader.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Session
  * @since      Class available since Release 0.2.0
@@ -126,7 +126,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
         $class = 'Piece_Unity_SessionTestCase_AutoloadClass';
         $oldIncludePath = set_include_path(dirname(__FILE__) . '/../..' . PATH_SEPARATOR . get_include_path());
         Piece_Unity_Session::addAutoloadClass($class);
-        $this->_session->start();
+        @$this->_session->start();
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $found = class_exists($class);
@@ -170,7 +170,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
     function testPreload()
     {
         $GLOBALS['loadCount'] = 0;
-        $this->_session->start();
+        @$this->_session->start();
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $this->assertFalse(class_exists('Piece_Unity_SessionTestCase_Foo'));

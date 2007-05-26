@@ -17,7 +17,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Registry.php,v 1.159 2006/12/20 19:34:03 cellog Exp $
+ * @version    CVS: $Id: Registry.php,v 1.159.2.1 2007/04/09 04:31:22 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -43,7 +43,7 @@ define('PEAR_REGISTRY_ERROR_CHANNEL_FILE', -6);
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -254,7 +254,7 @@ class PEAR_Registry extends PEAR
               $handle = opendir($this->statedir)) {
             $dest = $this->statedir . $ds;
             while (false !== ($file = readdir($handle))) {
-                if (preg_match('/^.*[A-Z].*\.reg$/', $file)) {
+                if (preg_match('/^.*[A-Z].*\.reg\\z/', $file)) {
                     rename($dest . $file, $dest . strtolower($file));
                 }
             }

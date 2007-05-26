@@ -17,7 +17,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Remote.php,v 1.96 2006/09/24 03:08:57 cellog Exp $
+ * @version    CVS: $Id: Remote.php,v 1.96.2.1 2007/04/09 04:31:22 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -37,7 +37,7 @@ require_once 'PEAR/REST.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -650,8 +650,8 @@ parameter.
         }
         $num = 0;
         while ($ent = readdir($dp)) {
-            if (preg_match('/^xmlrpc_cache_[a-z0-9]{32}$/', $ent) ||
-                  preg_match('/rest.cache(file|id)$/', $ent)) {
+            if (preg_match('/^xmlrpc_cache_[a-z0-9]{32}\\z/', $ent) ||
+                  preg_match('/rest.cache(file|id)\\z/', $ent)) {
                 $path = $cache_dir . DIRECTORY_SEPARATOR . $ent;
                 if (file_exists($path)) {
                     $ok = @unlink($path);

@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: URLTestCase.php 723 2007-02-19 05:15:00Z iteman $
+ * @version    SVN: $Id: URLTestCase.php 771 2007-05-21 02:22:48Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_URL
  * @since      File available since Release 0.9.0
@@ -52,7 +52,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_URL
  * @since      Class available since Release 0.9.0
@@ -78,9 +78,16 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+    }
+
     function tearDown()
     {
         Piece_Unity_Context::clear();
+        Piece_Unity_Error::clearErrors();
+        Piece_Unity_Error::popCallback();
     }
 
     function testExternalURL()
@@ -213,12 +220,13 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
 
     function testInvalidOperations()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $url = &new Piece_Unity_URL();
         $url->getQueryString();
         $url->addQueryString('foo', 'bar');
         $url->getURL();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
         $error = Piece_Unity_Error::pop();
 
@@ -235,6 +243,8 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $error = Piece_Unity_Error::pop();
 
         $this->assertNull($error);
+
+        Piece_Unity_Error::popCallback();
     }
 
     function testNonSSLableServers()

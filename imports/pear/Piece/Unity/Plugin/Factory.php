@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Factory.php 715 2007-02-18 10:52:49Z iteman $
+ * @version    SVN: $Id: Factory.php 747 2007-03-08 18:06:16Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.1.0
  */
@@ -55,7 +55,7 @@ $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = array('Piece_Unity_Plugin');
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.1.0
  */
@@ -95,8 +95,28 @@ class Piece_Unity_Plugin_Factory
     function &factory($pluginName)
     {
         if (!array_key_exists($pluginName, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
-            $pluginClass = Piece_Unity_Plugin_Factory::_findPluginClass($pluginName);
-            if (is_null($pluginClass)) {
+            $found = false;
+            foreach ($GLOBALS['PIECE_UNITY_Plugin_Prefixes'] as $prefixAlias) {
+                $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
+                if (Piece_Unity_Plugin_Factory::_loaded($pluginClass)) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
+                    foreach ($GLOBALS['PIECE_UNITY_Plugin_Prefixes'] as $prefixAlias) {
+                        $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
+                        if (Piece_Unity_Plugin_Factory::_loadFromDirectory($pluginClass, $pluginDirectory)) {
+                            $found = true;
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            if (!$found) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                         "The plugin [ $pluginName ] not found in the following directories:\n" .
                                         implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Directories'])
@@ -105,7 +125,7 @@ class Piece_Unity_Plugin_Factory
                 return $return;
             }
 
-            $plugin = &new $pluginClass();
+            $plugin = &new $pluginClass($prefixAlias);
             if (!is_subclass_of($plugin, 'Piece_Unity_Plugin_Common')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_PLUGIN,
                                         "The plugin [ $pluginName ] is invalid."

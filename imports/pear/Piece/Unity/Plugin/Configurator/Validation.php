@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Validation.php 728 2007-02-19 08:57:58Z iteman $
+ * @version    SVN: $Id: Validation.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.11.0
  */
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.11.0
  */
@@ -84,8 +84,8 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
     function invoke()
     {
         $validation = &$this->_context->getValidation();
-        $validation->setConfigDirectory($this->getConfiguration('configDirectory'));
-        $validation->setCacheDirectory($this->getConfiguration('cacheDirectory'));
+        $validation->setConfigDirectory($this->_getConfiguration('configDirectory'));
+        $validation->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
 
         $this->_setValidatorDirectories();
         $this->_setFilterDirectories();
@@ -123,7 +123,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     function _setValidatorDirectories()
     {
-        $validatorDirectories = $this->getConfiguration('validatorDirectories');
+        $validatorDirectories = $this->_getConfiguration('validatorDirectories');
         if (!is_array($validatorDirectories)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -148,7 +148,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     function _setFilterDirectories()
     {
-        $filterDirectories = $this->getConfiguration('filterDirectories');
+        $filterDirectories = $this->_getConfiguration('filterDirectories');
         if (!is_array($filterDirectories)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -173,7 +173,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     function _setValidatorPrefixes()
     {
-        $validatorPrefixes = $this->getConfiguration('validatorPrefixes');
+        $validatorPrefixes = $this->_getConfiguration('validatorPrefixes');
         if (!is_array($validatorPrefixes)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -198,7 +198,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     function _setFilterPrefixes()
     {
-        $filterPrefixes = $this->getConfiguration('filterPrefixes');
+        $filterPrefixes = $this->_getConfiguration('filterPrefixes');
         if (!is_array($filterPrefixes)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

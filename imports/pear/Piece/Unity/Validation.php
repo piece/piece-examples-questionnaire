@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Validation.php 727 2007-02-19 08:44:00Z iteman $
+ * @version    SVN: $Id: Validation.php 768 2007-05-21 02:14:03Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
  * @since      File available since Release 0.7.0
@@ -56,7 +56,7 @@ require_once 'Piece/Right/Results.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
  * @since      Class available since Release 0.7.0
@@ -188,7 +188,7 @@ class Piece_Unity_Validation
     function &getConfiguration()
     {
         if (is_null($this->_config)) {
-            $this->_config = new Piece_Right_Config();
+            $this->_config = &new Piece_Right_Config();
         }
 
         return $this->_config;

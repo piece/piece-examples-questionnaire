@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Session.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: Session.php 770 2007-05-21 02:17:13Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.2.0
  */
@@ -53,7 +53,7 @@ $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] = array();
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.2.0
  */
@@ -135,8 +135,7 @@ class Piece_Unity_Session
      */
     function &getAttribute($name)
     {
-        $attribute = &$this->_attributes[$name];
-        return $attribute;
+        return $this->_attributes[$name];
     }
 
     // }}}
@@ -186,7 +185,7 @@ class Piece_Unity_Session
             }
         }
 
-        @session_start();
+        session_start();
         $this->_attributes = &$_SESSION;
 
         if ($this->hasAttribute('_Piece_Unity_Session_Preload')) {

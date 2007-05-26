@@ -16,7 +16,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Auth.php,v 1.24 2006/03/05 21:23:21 cellog Exp $
+ * @version    CVS: $Id: Auth.php,v 1.28 2007/04/01 18:30:14 timj Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -36,7 +36,7 @@ require_once 'PEAR/Config.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */

@@ -25,11 +25,11 @@ REM -------------------
 REM Test to see if this is a raw pear.bat (uninstalled version)
 SET TMPTMPTMPTMPT=@includ
 SET PMTPMTPMT=%TMPTMPTMPTMPT%e_path@
-FOR %%x IN ("c:\cygwin\home\iteman\SVNWORK\piece-examples\trunk\questionnaire\scripts\..\imports\pear") DO (if %%x=="%PMTPMTPMT%" GOTO :NOTINSTALLED)
+FOR %%x IN ("C:\cygwin\home\iteman\SVNWORK\piece-examples\questionnaire\imports\pear") DO (if %%x=="%PMTPMTPMT%" GOTO :NOTINSTALLED)
 
 REM Check PEAR global ENV, set them if they do not exist
-IF "%PHP_PEAR_INSTALL_DIR%"=="" SET "PHP_PEAR_INSTALL_DIR=c:\cygwin\home\iteman\SVNWORK\piece-examples\trunk\questionnaire\scripts\..\imports\pear"
-IF "%PHP_PEAR_BIN_DIR%"=="" SET "PHP_PEAR_BIN_DIR=c:\cygwin\home\iteman\SVNWORK\piece-examples\trunk\questionnaire\scripts\..\imports\pear\bin"
+IF "%PHP_PEAR_INSTALL_DIR%"=="" SET "PHP_PEAR_INSTALL_DIR=C:\cygwin\home\iteman\SVNWORK\piece-examples\questionnaire\imports\pear"
+IF "%PHP_PEAR_BIN_DIR%"=="" SET "PHP_PEAR_BIN_DIR=C:\cygwin\home\iteman\SVNWORK\piece-examples\questionnaire\imports\pear\bin"
 IF "%PHP_PEAR_PHP_BIN%"=="" SET "PHP_PEAR_PHP_BIN=C:\win32app\php-5.2.1-Win32\php.exe"
 GOTO :INSTALLED
 

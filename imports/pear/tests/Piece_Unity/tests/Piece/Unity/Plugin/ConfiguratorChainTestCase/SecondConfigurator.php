@@ -49,7 +49,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_ConfiguratorChainTestCase
  * @since      Class available since Release 0.11.0

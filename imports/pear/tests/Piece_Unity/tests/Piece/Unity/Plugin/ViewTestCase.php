@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: ViewTestCase.php 713 2007-02-16 12:41:52Z iteman $
+ * @version    SVN: $Id: ViewTestCase.php 784 2007-05-22 13:40:34Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_View
  * @since      File available since Release 0.11.0
@@ -54,7 +54,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_View
  * @since      Class available since Release 0.11.0
@@ -135,6 +135,30 @@ class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+    }
+
+    /**
+     * @since Method available since Release 0.12.0
+     */
+    function testBuiltinElements()
+    {
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $view = &new Piece_Unity_Plugin_View();
+        $view->invoke();
+        $viewElement = &$context->getViewElement();
+        $elements = $viewElement->getElements();
+
+        $this->assertEquals(9, count($elements));
+        $this->assertTrue(array_key_exists('__request', $elements));
+        $this->assertTrue(array_key_exists('__session', $elements));
+        $this->assertTrue(array_key_exists('__eventNameKey', $elements));
+        $this->assertTrue(array_key_exists('__scriptName', $elements));
+        $this->assertTrue(array_key_exists('__basePath', $elements));
+        $this->assertTrue(array_key_exists('__sessionName', $elements));
+        $this->assertTrue(array_key_exists('__sessionID', $elements));
+        $this->assertTrue(array_key_exists('__appRootPath', $elements));
     }
 
     /**#@-*/

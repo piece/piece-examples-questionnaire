@@ -15,7 +15,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Frontend.php,v 1.9 2006/03/03 13:13:07 pajoye Exp $
+ * @version    CVS: $Id: Frontend.php,v 1.10.2.2 2007/04/11 19:18:40 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -35,14 +35,12 @@ $GLOBALS['_PEAR_FRONTEND_SINGLETON'] = null;
 /**
  * Singleton-based frontend for PEAR user input/output
  *
- * Note that frontend classes must implement userConfirm(), and shoul implement
- * displayFatalError() and outputData()
  * @category   pear
  * @package    PEAR
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -92,7 +90,7 @@ class PEAR_Frontend extends PEAR
             $obj = &new $uiclass;
             // quick test to see if this class implements a few of the most
             // important frontend methods
-            if (method_exists($obj, 'userConfirm')) {
+            if (is_a($obj, 'PEAR_Frontend')) {
                 $GLOBALS['_PEAR_FRONTEND_SINGLETON'] = &$obj;
                 $GLOBALS['_PEAR_FRONTEND_CLASS'] = $uiclass;
                 return $obj;
@@ -106,7 +104,7 @@ class PEAR_Frontend extends PEAR
     }
 
     /**
-     * Set the frontend class that will be used by calls to {@link singleton()}
+     * Set the frontend object that will be used by calls to {@link singleton()}
      *
      * Frontends are expected to be a descendant of PEAR_Frontend
      * @param PEAR_Frontend
@@ -124,17 +122,9 @@ class PEAR_Frontend extends PEAR
                 get_class($uiobject) . ')');
             return $err;
         }
-        // quick test to see if this class implements a few of the most
-        // important frontend methods
-        if (method_exists($uiobject, 'userConfirm')) {
-            $GLOBALS['_PEAR_FRONTEND_SINGLETON'] = &$uiobject;
-            $GLOBALS['_PEAR_FRONTEND_CLASS'] = get_class($uiobject);
-            return $uiobject;
-        } else {
-            $err = PEAR::raiseError("not a value frontend class: (" . get_class($uiobject)
-                . ')');
-            return $err;
-        }
+        $GLOBALS['_PEAR_FRONTEND_SINGLETON'] = &$uiobject;
+        $GLOBALS['_PEAR_FRONTEND_CLASS'] = get_class($uiobject);
+        return $uiobject;
     }
 
     /**
@@ -179,7 +169,59 @@ class PEAR_Frontend extends PEAR
         $GLOBALS['_PEAR_Common_tempfiles'][] = $file;
     }
 
+    /**
+     * Log an action
+     *
+     * @param string $msg the message to log
+     * @param boolean $append_crlf
+     * @return boolean true
+     * @abstract
+     */
     function log($msg, $append_crlf = true)
+    {
+    }
+
+    /**
+     * Run a post-installation script
+     *
+     * @param array $scripts array of post-install scripts
+     * @abstract
+     */
+    function runPostinstallScripts(&$scripts)
+    {
+    }
+
+    /**
+     * Display human-friendly output formatted depending on the
+     * $command parameter.
+     *
+     * This should be able to handle basic output data with no command
+     * @param mixed  $data    data structure containing the information to display
+     * @param string $command command from which this method was called
+     * @abstract
+     */
+    function outputData($data, $command = '_default')
+    {
+    }
+
+    /**
+     * Display a modal form dialog and return the given input
+     *
+     * A frontend that requires multiple requests to retrieve and process
+     * data must take these needs into account, and implement the request
+     * handling code.
+     * @param string $command  command from which this method was called
+     * @param array  $prompts  associative array. keys are the input field names
+     *                         and values are the description
+     * @param array  $types    array of input field types (text, password,
+     *                         etc.) keys have to be the same like in $prompts
+     * @param array  $defaults array of default values. again keys have
+     *                         to be the same like in $prompts.  Do not depend
+     *                         on a default value being set.
+     * @return array input sent by the user
+     * @abstract
+     */
+    function userDialog($command, $prompts, $types = array(), $defaults = array())
     {
     }
 }

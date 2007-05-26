@@ -18,7 +18,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Installer.php,v 1.243 2007/02/16 04:00:37 cellog Exp $
+ * @version    CVS: $Id: Installer.php,v 1.243.2.2 2007/05/08 04:06:31 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -42,7 +42,7 @@ define('PEAR_INSTALLER_NOBINARY', -240);
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -292,6 +292,9 @@ class PEAR_Installer extends PEAR_Downloader
             $installedas_dest_file = $installedas_dest_dir . DIRECTORY_SEPARATOR . '.tmp' . basename($final_dest_file);
         }
         $dest_dir = dirname($final_dest_file);
+        if (preg_match('~/\.\.(/|\\z)|^\.\./~', str_replace('\\', '/', $dest_file))) {
+            return $this->raiseError("SECURITY ERROR: file $file (installed to $dest_file) contains parent directory reference ..", PEAR_INSTALLER_FAILED);
+        }
         $dest_file = $dest_dir . DIRECTORY_SEPARATOR . '.tmp' . basename($final_dest_file);
         // }}}
 
@@ -335,7 +338,7 @@ class PEAR_Installer extends PEAR_Downloader
                 foreach ($atts['replacements'] as $a) {
                     $to = '';
                     if ($a['type'] == 'php-const') {
-                        if (preg_match('/^[a-z0-9_]+$/i', $a['to'])) {
+                        if (preg_match('/^[a-z0-9_]+\\z/i', $a['to'])) {
                             eval("\$to = $a[to];");
                         } else {
                             if (!isset($options['soft'])) {
@@ -481,6 +484,9 @@ class PEAR_Installer extends PEAR_Downloader
             return $info;
         } else {
             list($save_destdir, $dest_dir, $dest_file, $orig_file) = $info;
+        }
+        if (preg_match('~/\.\.(/|\\z)|^\.\./~', str_replace('\\', '/', $dest_file))) {
+            return $this->raiseError("SECURITY ERROR: file $file (installed to $dest_file) contains parent directory reference ..", PEAR_INSTALLER_FAILED);
         }
         $final_dest_file = $installed_as = $dest_file;
         if (isset($this->_options['packagingroot'])) {

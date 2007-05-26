@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Foo.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: Foo.php 749 2007-03-08 19:20:00Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
  */
@@ -48,7 +48,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
  */
@@ -73,12 +73,6 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase_Foo extends Piece_Unity_Plug
      * @access public
      */
 
-    function Piece_Unity_Plugin_Foo()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('bar');
-    }
-
     function invoke()
     {
         ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
@@ -91,6 +85,11 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase_Foo extends Piece_Unity_Plug
     /**#@+
      * @access private
      */
+
+    function _initialize()
+    {
+        $this->_addExtensionPoint('bar');
+    }
 
     /**#@-*/
 

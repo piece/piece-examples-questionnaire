@@ -33,7 +33,7 @@
  * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Redirection.php 711 2007-02-16 12:11:51Z iteman $
+ * @version    SVN: $Id: Redirection.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.6.0
  */
@@ -51,7 +51,7 @@ require_once 'Piece/Unity/URL.php';
  * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.6.0
  */
@@ -86,7 +86,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $isExternal = $this->getConfiguration('isExternal');
+        $isExternal = $this->_getConfiguration('isExternal');
         $viewString = $this->_context->getView();
         $url = &new Piece_Unity_URL($viewString, $isExternal);
 
@@ -104,13 +104,13 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
         }
 
         if (!$isExternal) {
-            if ($this->getConfiguration('addSessionID')) {
+            if ($this->_getConfiguration('addSessionID')) {
                 $url->addQueryString($viewElements['__sessionName'],
                                      $viewElements['__sessionID']
                                      );
             }
 
-            if ($this->getConfiguration('addFlowExecutionTicket')) {
+            if ($this->_getConfiguration('addFlowExecutionTicket')) {
                 if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
                     $url->addQueryString($viewElements['__flowExecutionTicketKey'],
                                          $viewElements['__flowExecutionTicket']

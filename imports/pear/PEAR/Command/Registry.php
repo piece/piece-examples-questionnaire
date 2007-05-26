@@ -16,7 +16,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Registry.php,v 1.75 2006/11/19 23:50:09 cellog Exp $
+ * @version    CVS: $Id: Registry.php,v 1.76 2007/03/18 19:48:19 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -35,7 +35,7 @@ require_once 'PEAR/Command/Common.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -637,9 +637,12 @@ installed package.'
         }
         $info['Release Notes'] = $obj->getNotes();
         if ($compat = $obj->getCompatible()) {
+            if (!isset($compat[0])) {
+                $compat = array($compat);
+            }
             $info['Compatible with'] = '';
             foreach ($compat as $package) {
-                $info['Compatible with'] .= $package['channel'] . '/' . $package['package'] .
+                $info['Compatible with'] .= $package['channel'] . '/' . $package['name'] .
                     "\nVersions >= " . $package['min'] . ', <= ' . $package['max'];
                 if (isset($package['exclude'])) {
                     if (is_array($package['exclude'])) {
@@ -651,7 +654,7 @@ installed package.'
                         $info['Not Compatible with'] .= "\n";
                     }
                     $info['Not Compatible with'] .= $package['channel'] . '/' .
-                        $package['package'] . "\nVersions " . $package['exclude'];
+                        $package['name'] . "\nVersions " . $package['exclude'];
                 }
             }
         }

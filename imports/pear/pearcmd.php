@@ -29,8 +29,8 @@ define('PEAR_IGNORE_BACKTRACE', 1);
 /**
  * @nodep Gtk
  */
-if ('c:\cygwin\home\iteman\SVNWORK\piece-examples\trunk\questionnaire\scripts\..\imports\pear' != '@'.'include_path'.'@') {
-    ini_set('include_path', 'c:\cygwin\home\iteman\SVNWORK\piece-examples\trunk\questionnaire\scripts\..\imports\pear');
+if ('C:\cygwin\home\iteman\SVNWORK\piece-examples\questionnaire\imports\pear' != '@'.'include_path'.'@') {
+    ini_set('include_path', 'C:\cygwin\home\iteman\SVNWORK\piece-examples\questionnaire\imports\pear');
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro
@@ -47,7 +47,7 @@ ob_implicit_flush(true);
 $_PEAR_PHPDIR = '#$%^&*';
 set_error_handler('error_handler');
 
-$pear_package_version = "1.5.1";
+$pear_package_version = "1.5.4";
 
 require_once 'PEAR.php';
 require_once 'PEAR/Frontend.php';

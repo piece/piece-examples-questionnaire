@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: OutputBufferStack.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: OutputBufferStack.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.4.0
  */
@@ -44,14 +44,14 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 // {{{ Piece_Unity_Plugin_OutputBufferStack
 
 /**
- * An output filter which turns output buffering on, and registers all output
- * handlers.
+ * An output filter which turns output buffering on, and registers each output
+ * filters as a PHP's output handler using ob_start().
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.4.0
  */
@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $filters = &$this->getExtension('filters');
+        $filters = &$this->_getExtension('filters');
         if (!is_array($filters)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

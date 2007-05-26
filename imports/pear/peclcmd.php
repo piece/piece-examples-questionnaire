@@ -23,8 +23,8 @@
 /**
  * @nodep Gtk
  */
-if ('c:\cygwin\home\iteman\SVNWORK\piece-examples\trunk\questionnaire\scripts\..\imports\pear' != '@'.'include_path'.'@') {
-    ini_set('include_path', 'c:\cygwin\home\iteman\SVNWORK\piece-examples\trunk\questionnaire\scripts\..\imports\pear');
+if ('C:\cygwin\home\iteman\SVNWORK\piece-examples\questionnaire\imports\pear' != '@'.'include_path'.'@') {
+    ini_set('include_path', 'C:\cygwin\home\iteman\SVNWORK\piece-examples\questionnaire\imports\pear');
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro

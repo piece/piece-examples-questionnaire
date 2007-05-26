@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Context.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: Context.php 779 2007-05-22 11:47:07Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.1.0
  */
@@ -56,7 +56,7 @@ $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.1.0
  */
@@ -89,6 +89,15 @@ class Piece_Unity_Context
     var $_proxyPath;
     var $_continuation;
     var $_validation;
+    var $_proxyMeasures = array('HTTP_X_FORWARDED_FOR',
+                                'HTTP_X_FORWARDED',
+                                'HTTP_FORWARDED_FOR',
+                                'HTTP_FORWARDED',
+                                'HTTP_VIA',
+                                'HTTP_X_COMING_FROM',
+                                'HTTP_COMING_FROM'
+                                );
+    var $_appRootPath = '';
 
     /**#@-*/
 
@@ -225,7 +234,6 @@ class Piece_Unity_Context
      */
     function clear()
     {
-        unset($GLOBALS['PIECE_UNITY_Context_Instance']);
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
 
@@ -393,8 +401,7 @@ class Piece_Unity_Context
      */
     function &getAttribute($name)
     {
-        $attribute = &$this->_attributes[$name];
-        return $attribute;
+        return $this->_attributes[$name];
     }
 
     // }}}
@@ -462,16 +469,8 @@ class Piece_Unity_Context
      */
     function usingProxy()
     {
-        $measures = array('HTTP_X_FORWARDED_FOR',
-                          'HTTP_X_FORWARDED',
-                          'HTTP_FORWARDED_FOR',
-                          'HTTP_FORWARDED',
-                          'HTTP_VIA',
-                          'HTTP_X_COMING_FROM',
-                          'HTTP_COMING_FROM'
-                          );
-        foreach ($measures as $measure) {
-            if (array_key_exists($measure, $_SERVER)) {
+        foreach ($this->_proxyMeasures as $proxyMeasure) {
+            if (array_key_exists($proxyMeasure, $_SERVER)) {
                 return true;
             }
         }
@@ -521,6 +520,58 @@ class Piece_Unity_Context
         return $this->_validation;
     }
 
+    // }}}
+    // {{{ getRemoteAddr()
+
+    /**
+     * Gets an IP address (or IP addresses) of the client making the request.
+     *
+     * @return string
+     * @since Method available since Release 0.12.0
+     */
+    function getRemoteAddr()
+    {
+        if ($this->usingProxy()) {
+            foreach ($this->_proxyMeasures as $proxyMeasure) {
+                if (array_key_exists($proxyMeasure, $_SERVER)) {
+                    return $_SERVER[$proxyMeasure];
+                }
+            }
+        } else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+    }
+
+    // }}}
+    // {{{ setAppRootPath()
+
+    /**
+     * Sets the URL path that form the top of the document tree of
+     * an application visible from the web.
+     *
+     * @param string $appRootPath
+     * @since Method available since Release 0.12.0
+     */
+    function setAppRootPath($appRootPath)
+    {
+        $this->_appRootPath = $appRootPath;
+    }
+
+    // }}}
+    // {{{ getAppRootPath()
+
+    /**
+     * Gets the URL path that form the top of the document tree of
+     * an application visible from the web.
+     *
+     * @return string
+     * @since Method available since Release 0.12.0
+     */
+    function getAppRootPath()
+    {
+        return $this->_appRootPath;
+    }
+
     /**#@-*/
 
     /**#@+
@@ -552,7 +603,7 @@ class Piece_Unity_Context
     // {{{ _importEventNameFromSubmit()
 
     /**
-     * Imports an event name from the submit by a submit or a image.
+     * Imports an event name from the submit by a submit or an image.
      *
      * @since Method available since Release 0.9.0
      */

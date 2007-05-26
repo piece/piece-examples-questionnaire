@@ -18,7 +18,7 @@
  * @author     Martin Jansen <mj@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Downloader.php,v 1.123 2007/02/20 00:16:12 cellog Exp $
+ * @version    CVS: $Id: Downloader.php,v 1.124.2.1 2007/04/09 04:31:22 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.3.0
  */
@@ -45,7 +45,7 @@ define('PEAR_INSTALLER_ERROR_NO_PREF_STATE', 2);
  * @author     Martin Jansen <mj@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.3.0
  */
@@ -402,6 +402,7 @@ class PEAR_Downloader extends PEAR_Common
         if (isset($this->_options['pretend'])) {
             return $params;
         }
+        $somefailed = false;
         foreach ($params as $i => $package) {
             PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
             $pf = &$params[$i]->download();
@@ -414,12 +415,24 @@ class PEAR_Downloader extends PEAR_Common
                             true) .
                         '"');
                 }
+                $somefailed = true;
                 continue;
             }
             $newparams[] = &$params[$i];
             $ret[] = array('file' => $pf->getArchiveFile(),
                                    'info' => &$pf,
                                    'pkg' => $pf->getPackage());
+        }
+        if ($somefailed) {
+            // remove params that did not download successfully
+            PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
+            $err = $this->analyzeDependencies($newparams, true);
+            PEAR::popErrorHandling();
+            if (!count($newparams)) {
+                $this->pushError('Download failed', PEAR_INSTALLER_FAILED);
+                $a = array();
+                return $a;
+            }
         }
         $this->_downloadedPackages = $ret;
         return $newparams;
@@ -428,7 +441,7 @@ class PEAR_Downloader extends PEAR_Common
     /**
      * @param array all packages to be installed
      */
-    function analyzeDependencies(&$params)
+    function analyzeDependencies(&$params, $force = false)
     {
         $hasfailed = $failed = false;
         if (isset($this->_options['downloadonly'])) {
@@ -464,7 +477,7 @@ class PEAR_Downloader extends PEAR_Common
                     }
                     continue;
                 }
-                if (!$reset && $param->alreadyValidated()) {
+                if (!$reset && $param->alreadyValidated() && !$force) {
                     continue;
                 }
                 if (count($deps)) {
@@ -1586,7 +1599,7 @@ class PEAR_Downloader extends PEAR_Common
         } else {
             $ifmodifiedsince = ($lastmodified ? "If-Modified-Since: $lastmodified\r\n" : '');
         }
-        $request .= $ifmodifiedsince . "User-Agent: PEAR/1.5.1/PHP/" .
+        $request .= $ifmodifiedsince . "User-Agent: PEAR/1.5.4/PHP/" .
             PHP_VERSION . "\r\n";
         if (isset($this)) { // only pass in authentication for non-static calls
             $username = $config->get('username');
@@ -1609,7 +1622,7 @@ class PEAR_Downloader extends PEAR_Common
         $headers = array();
         $reply = 0;
         while (trim($line = fgets($fp, 1024))) {
-            if (preg_match('/^([^:]+):\s+(.*)\s*$/', $line, $matches)) {
+            if (preg_match('/^([^:]+):\s+(.*)\s*\\z/', $line, $matches)) {
                 $headers[strtolower($matches[1])] = trim($matches[2]);
             } elseif (preg_match('|^HTTP/1.[01] ([0-9]{3}) |', $line, $matches)) {
                 $reply = (int) $matches[1];

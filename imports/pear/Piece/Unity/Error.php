@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Error.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: Error.php 742 2007-03-07 11:01:58Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.1.0
  */
@@ -65,7 +65,7 @@ define('PIECE_UNITY_ERROR_INVALID_OPERATION',    -10);
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.1.0
  */
@@ -219,20 +219,14 @@ class Piece_Unity_Error
             $backtrace = debug_backtrace();
         }
 
-        if ($level == 'exception') {
-            $context = $error->getBacktrace();
-        } else {
-            $context = array();
-        }
-
         Piece_Unity_Error::push($code, $message, $level, $params,
                                 array('code' => $error->getCode(),
                                       'message' => $error->getMessage(),
-                                      'params' => array(),
+                                      'params' => array('userinfo' => $error->getUserInfo(),
+                                                        'debuginfo' => $error->getDebugInfo()),
                                       'package' => 'PEAR',
                                       'level' => $level,
-                                      'time' => $time,
-                                      'context' => $context),
+                                      'time' => $time),
                                 $backtrace
                                 );
     }
@@ -241,6 +235,7 @@ class Piece_Unity_Error
     // {{{ pushPHPError()
 
     /**
+     * Adds a PHP error to the stack for the package.
      *
      * @param integer $code
      * @param string  $message

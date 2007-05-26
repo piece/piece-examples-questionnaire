@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: ConfiguratorChain.php 729 2007-02-19 09:15:16Z iteman $
+ * @version    SVN: $Id: ConfiguratorChain.php 789 2007-05-26 06:35:47Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.11.0
  */
@@ -49,7 +49,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.11.0
  */
@@ -68,9 +68,11 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    var $_requiredConfigurators = array('Configurator_Plugin',
+    var $_requiredConfigurators = array('Configurator_AppRoot',
+                                        'Configurator_Plugin',
                                         'Configurator_Env',
                                         'Configurator_Event',
+                                        'Configurator_Proxy',
                                         'Configurator_Request',
                                         'Configurator_Validation'
                                         );
@@ -89,7 +91,7 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $configurators = &$this->getExtension('configurators');
+        $configurators = &$this->_getExtension('configurators');
         if (!is_array($configurators)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

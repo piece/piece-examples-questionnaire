@@ -33,7 +33,7 @@
  * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: URL.php 723 2007-02-19 05:15:00Z iteman $
+ * @version    SVN: $Id: URL.php 771 2007-05-21 02:22:48Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.9.0
  */
@@ -58,7 +58,7 @@ $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'] = array();
  * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  */
@@ -110,16 +110,14 @@ class Piece_Unity_URL
      * Gets the query string of a URL.
      *
      * @return boolean
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function getQueryString()
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -134,16 +132,14 @@ class Piece_Unity_URL
      *
      * @param string $name
      * @param string $value
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function addQueryString($name, $value)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -158,16 +154,14 @@ class Piece_Unity_URL
      *
      * @param boolean $useSSL
      * @return string
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function getURL($useSSL = false)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -307,16 +301,14 @@ class Piece_Unity_URL
      *
      * @param string $name
      * @since Method available since Release 0.11.0
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function removeQueryString($name)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 

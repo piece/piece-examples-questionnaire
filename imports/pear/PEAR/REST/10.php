@@ -15,7 +15,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: 10.php,v 1.43 2006/11/01 05:09:05 cellog Exp $
+ * @version    CVS: $Id: 10.php,v 1.44 2007/03/21 06:18:04 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a12
  */
@@ -33,7 +33,7 @@ require_once 'PEAR/REST.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a12
  */
@@ -325,8 +325,13 @@ class PEAR_REST_10
             break;
         }
         if (isset($pinfo['dc']) && isset($pinfo['dp'])) {
-            $deprecated = array('channel' => (string) $pinfo['dc'],
-                                'package' => trim($pinfo['dp']['_content']));
+            if (is_array($pinfo['dp'])) {
+                $deprecated = array('channel' => (string) $pinfo['dc'],
+                                    'package' => trim($pinfo['dp']['_content']));
+            } else {
+                $deprecated = array('channel' => (string) $pinfo['dc'],
+                                    'package' => trim($pinfo['dp']));
+            }
         } else {
             $deprecated = false;
         }
@@ -642,8 +647,13 @@ class PEAR_REST_10
         }
         PEAR::popErrorHandling();
         if (isset($pinfo['dc']) && isset($pinfo['dp'])) {
-            $deprecated = array('channel' => (string) $pinfo['dc'],
-                                'package' => trim($pinfo['dp']['_content']));
+            if (is_array($pinfo['dp'])) {
+                $deprecated = array('channel' => (string) $pinfo['dc'],
+                                    'package' => trim($pinfo['dp']['_content']));
+            } else {
+                $deprecated = array('channel' => (string) $pinfo['dc'],
+                                    'package' => trim($pinfo['dp']));
+            }
         } else {
             $deprecated = false;
         }

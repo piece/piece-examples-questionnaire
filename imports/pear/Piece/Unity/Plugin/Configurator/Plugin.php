@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Plugin.php 728 2007-02-19 08:57:58Z iteman $
+ * @version    SVN: $Id: Plugin.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.11.0
  */
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.11.0
  */
@@ -119,7 +119,7 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
      */
     function _setPluginDirectories()
     {
-        $pluginDirectories = $this->getConfiguration('pluginDirectories');
+        $pluginDirectories = $this->_getConfiguration('pluginDirectories');
         if (!is_array($pluginDirectories)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -144,7 +144,7 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
      */
     function _setPluginPrefixes()
     {
-        $pluginPrefixes = $this->getConfiguration('pluginPrefixes');
+        $pluginPrefixes = $this->_getConfiguration('pluginPrefixes');
         if (!is_array($pluginPrefixes)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

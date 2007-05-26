@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: SessionStart.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: SessionStart.php 781 2007-05-22 12:32:04Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.5.0
  */
@@ -48,7 +48,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.5.0
  */
@@ -80,27 +80,11 @@ class Piece_Unity_Plugin_Interceptor_SessionStart extends Piece_Unity_Plugin_Com
      * Invokes the plugin specific code.
      *
      * @return boolean
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      */
     function invoke()
     {
-        if ($this->getConfiguration('importSessionIDFromRequest')) {
-            $request = &$this->_context->getRequest();
-            $sessionName = session_name();
-            if ($request->hasParameter($sessionName)) {
-                session_id($request->getParameter($sessionName));
-            } else {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The parameter [ $sessionName ] which is used as the current session name not found in the request parameters."
-                                        );
-
-                return;
-            }
-        }
-
         $session = &$this->_context->getSession();
         $session->start();
-
         return true;
     }
 
@@ -109,17 +93,6 @@ class Piece_Unity_Plugin_Interceptor_SessionStart extends Piece_Unity_Plugin_Com
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('importSessionIDFromRequest', false);
-    }
 
     /**#@-*/
 

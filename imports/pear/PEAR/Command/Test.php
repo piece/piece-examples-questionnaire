@@ -17,7 +17,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Test.php,v 1.15 2007/02/17 17:51:25 cellog Exp $
+ * @version    CVS: $Id: Test.php,v 1.15.2.1 2007/04/09 04:31:22 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -37,7 +37,7 @@ require_once 'PEAR/Command/Common.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -154,11 +154,11 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                         continue;
                     }
                     if (isset($options['phpunit'])) {
-                        if (!preg_match('/AllTests\.php$/i', $name)) {
+                        if (!preg_match('/AllTests\.php\\z/i', $name)) {
                             continue;
                         }
                     } else {
-                        if (!preg_match('/\.phpt$/', $name)) {
+                        if (!preg_match('/\.phpt\\z/', $name)) {
                             continue;
                         }
                     }
@@ -180,13 +180,13 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                 $tests = array_merge($tests, $dir);
             } else {
                 if (isset($options['phpunit'])) {
-                    if (!preg_match('/AllTests\.php$/i', $p)) {
+                    if (!preg_match('/AllTests\.php\\z/i', $p)) {
                         continue;
                     }
                     $tests[] = $p;
                 } else {
                     if (!file_exists($p)) {
-                        if (!preg_match('/\.phpt$/', $p)) {
+                        if (!preg_match('/\.phpt\\z/', $p)) {
                             $p .= '.phpt';
                         }
                         $dir = System::find(array(dirname($p), '-type', 'f',

@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Event.php 728 2007-02-19 08:57:58Z iteman $
+ * @version    SVN: $Id: Event.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.11.0
  */
@@ -48,7 +48,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.11.0
  */
@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $this->_context->setEventNameKey($this->getConfiguration('eventNameKey'));
+        $this->_context->setEventNameKey($this->_getConfiguration('eventNameKey'));
         $this->_setEventName();
     }
 
@@ -111,7 +111,7 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
      */
     function _setEventName()
     {
-        $eventName = $this->getConfiguration('eventName');
+        $eventName = $this->_getConfiguration('eventName');
         if (!is_null($eventName)) {
             $this->_context->setEventName($eventName);
         }

@@ -16,7 +16,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: RunTest.php,v 1.34 2007/02/17 19:57:56 cellog Exp $
+ * @version    CVS: $Id: RunTest.php,v 1.36.2.2 2007/04/12 01:53:48 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.3.3
  */
@@ -44,7 +44,7 @@ putenv("PHP_PEAR_RUNTESTS=1");
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.3.3
  */
@@ -58,12 +58,11 @@ class PEAR_RunTest
         'safe_mode=0',
         'disable_functions=',
         'output_buffering=Off',
-        'error_reporting=E_ALL',
         'display_errors=1',
         'log_errors=0',
         'html_errors=0',
         'track_errors=1',
-        'report_memleaks=1',
+        'report_memleaks=0',
         'report_zend_debug=0',
         'docref_root=',
         'docref_ext=.html',
@@ -81,6 +80,7 @@ class PEAR_RunTest
      */
     function PEAR_RunTest($logger = null, $options = array())
     {
+        $this->ini_overwrites[] = 'error_reporting=' . E_ALL;
         if (is_null($logger)) {
             require_once 'PEAR/Common.php';
             $logger = new PEAR_Common;
@@ -489,8 +489,8 @@ class PEAR_RunTest
             $return_value = $out[0];
             $out = $out[1];
         }
-        if (isset($tmp_post) && realpath($tmp_post)) {
-            unlink(realpath($tmp_post));
+        if (isset($tmp_post) && realpath($tmp_post) && file_exists($tmp_post)) {
+            @unlink(realpath($tmp_post));
         }
         chdir($savedir);
 
@@ -509,6 +509,7 @@ class PEAR_RunTest
         /* when using CGI, strip the headers from the output */
         $headers = "";
         if (!empty($this->_options['cgi']) &&
+              $php == $this->_options['cgi'] && 
               preg_match("/^(.*?)\r?\n\r?\n(.*)/s", $out, $match)) {
             $output = trim($match[2]);
             $rh = preg_split("/[\n\r]+/",$match[1]);
@@ -733,13 +734,13 @@ $return_value
         $o2 = array();
         foreach($w1 as $idx => $val) {
             if (!$wanted_re || !isset($wr[$idx]) || !isset($o1[$idx]) ||
-                  !preg_match('/^' . $wr[$idx] . '$/', $o1[$idx])) {
+                  !preg_match('/^' . $wr[$idx] . '\\z/', $o1[$idx])) {
                 $w2[sprintf("%03d<", $idx)] = sprintf("%03d- ", $idx + 1) . $val;
             }
         }
         foreach($o1 as $idx => $val) {
             if (!$wanted_re || !isset($wr[$idx]) ||
-                  !preg_match('/^' . $wr[$idx] . '$/', $val)) {
+                  !preg_match('/^' . $wr[$idx] . '\\z/', $val)) {
                 $o2[sprintf("%03d>", $idx)] = sprintf("%03d+ ", $idx + 1) . $val;
             }
         }

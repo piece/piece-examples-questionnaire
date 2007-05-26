@@ -15,7 +15,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: 11.php,v 1.8 2007/01/27 16:10:23 cellog Exp $
+ * @version    CVS: $Id: 11.php,v 1.9.2.1 2007/04/09 01:44:36 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.3
  */
@@ -33,7 +33,7 @@ require_once 'PEAR/REST.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.3
  */
@@ -109,7 +109,7 @@ class PEAR_REST_11
                             }
                         }
                         if (!isset($unstable) && $release['s'] != 'stable') {
-                            $latest = $unstable = $release['v'];
+                            $unstable = $release['v'];
                             $state = $release['s'];
                         }
                         if (isset($latest) && !isset($state)) {
@@ -154,12 +154,10 @@ class PEAR_REST_11
                     $latest = false;
                 }
 
-                if ($latest && $packageinfo['deps'] !== null) {
-                    if (isset($packageinfo['deps'])) {
-                        if (!is_array($packageinfo['deps']) ||
-                              !isset($packageinfo['deps'][0])) {
-                            $packageinfo['deps'] = array($packageinfo['deps']);
-                        }
+                if ($latest && isset($packageinfo['deps'])) {
+                    if (!is_array($packageinfo['deps']) ||
+                          !isset($packageinfo['deps'][0])) {
+                        $packageinfo['deps'] = array($packageinfo['deps']);
                     }
                     $d = false;
                     foreach ($packageinfo['deps'] as $dep) {

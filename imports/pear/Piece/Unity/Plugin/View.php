@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: View.php 713 2007-02-16 12:41:52Z iteman $
+ * @version    SVN: $Id: View.php 783 2007-05-22 13:21:32Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.1.0
  */
@@ -51,7 +51,7 @@ require_once 'Piece/Unity/URL.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.1.0
  */
@@ -101,6 +101,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $viewElement->setElement('__basePath', $this->_context->getBasePath());
         $viewElement->setElement('__sessionName', session_name());
         $viewElement->setElement('__sessionID', session_id());
+        $viewElement->setElement('__appRootPath', $this->_context->getAppRootPath());
         $url = &new Piece_Unity_URL();
         $viewElement->setElement('__url', $url);
 
@@ -108,7 +109,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
          * Overwrites the current view with another one which is specified by
          * forcedView configuration.
          */
-        $forcedView = $this->getConfiguration('forcedView');
+        $forcedView = $this->_getConfiguration('forcedView');
         if (!is_null($forcedView)) {
             $this->_context->setView($forcedView);
         }
@@ -133,6 +134,8 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         if (preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
             $config = &$this->_context->getConfiguration();
             $config->setExtension('View', 'renderer', 'Renderer_Redirection');
+            $config->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
+
             if (substr($viewString, 0, 7) == 'self://') {
                 $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
             } elseif (substr($viewString, 0, 8) == 'selfs://') {
@@ -140,7 +143,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
             }
         }
 
-        $renderer = &$this->getExtension('renderer');
+        $renderer = &$this->_getExtension('renderer');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }

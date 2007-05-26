@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Factory.php 697 2007-01-12 16:45:29Z iteman $
+ * @version    SVN: $Id: Factory.php 770 2007-05-21 02:17:13Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.1.0
  */
@@ -57,7 +57,7 @@ if (version_compare(phpversion(), '5.0.0', '<')) {
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.1.0
  */
@@ -166,8 +166,7 @@ class Piece_Unity_Config_Factory
             return $config;
         }
 
-        $config = &Piece_Unity_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
-        return $config;
+        return Piece_Unity_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
     }
 
     /**#@-*/

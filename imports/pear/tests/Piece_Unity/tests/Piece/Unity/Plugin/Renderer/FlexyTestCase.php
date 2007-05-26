@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FlexyTestCase.php 701 2007-01-20 18:42:27Z iteman $
+ * @version    SVN: $Id: FlexyTestCase.php 786 2007-05-23 02:30:39Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Renderer_Flexy
  * @since      File available since Release 0.2.0
@@ -52,7 +52,7 @@ require_once 'Piece/Unity/Context.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Renderer_Flexy
  * @since      Class available since Release 0.2.0
@@ -86,7 +86,6 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
   </form>
 </body>
 ';
-    var $_errorCodeWhenTemplateNotExists = PIECE_UNITY_ERROR_NOT_FOUND;
 
     /**#@-*/
 

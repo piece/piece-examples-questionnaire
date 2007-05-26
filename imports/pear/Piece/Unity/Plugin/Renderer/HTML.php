@@ -32,7 +32,7 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: HTML.php 701 2007-01-20 18:42:27Z iteman $
+ * @version    SVN: $Id: HTML.php 786 2007-05-23 02:30:39Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.9.0
  */
@@ -49,7 +49,7 @@ require_once 'Piece/Unity/Error.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  * @abstract
@@ -85,8 +85,8 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $useLayout = $this->getConfiguration('useLayout');
-        if ($this->getConfiguration('turnOffLayoutByHTTPAccept')) {
+        $useLayout = $this->_getConfiguration('useLayout');
+        if ($this->_getConfiguration('turnOffLayoutByHTTPAccept')) {
             if (array_key_exists('HTTP_ACCEPT', $_SERVER)) {
                 if ($_SERVER['HTTP_ACCEPT'] == 'application/x-piece-html-fragment') {
                     $useLayout = false;
@@ -152,23 +152,38 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function _render($isLayout)
     {
-        $useFallback = $this->getConfiguration('useFallback');
-
-        if ($useFallback) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        }
-
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $this->_doRender($isLayout);
+        Piece_Unity_Error::popCallback();
 
-        if ($useFallback) {
-            Piece_Unity_Error::popCallback();
-        }
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            $error = Piece_Unity_Error::pop();
+            if ($error['code'] == 'PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND') {
+                if ($this->_getConfiguration('useFallback')) {
+                    $this->_context->setView($this->_getConfiguration('fallbackView'));
+                    $this->_prepareFallback();
+                    $this->_doRender($isLayout);
+                    return;
+                } else {
+                    $level = 'warning';
+                }
+            } else {
+                $level = 'exception';
+            }
 
-        if ($useFallback) {
-            if (Piece_Unity_Error::hasErrors()) {
-                $this->_context->setView($this->getConfiguration('fallbackView'));
-                $this->_prepareFallback();
-                $this->_doRender($isLayout);
+            if ($level == 'warning') {
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            }
+
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to render a HTML template with the plugin [ ' . get_class($this) . ' ].',
+                                    $level,
+                                    array('plugin' => __CLASS__),
+                                    $error
+                                    );
+
+            if ($level == 'warning') {
+                Piece_Unity_Error::popCallback();
             }
         }
     }

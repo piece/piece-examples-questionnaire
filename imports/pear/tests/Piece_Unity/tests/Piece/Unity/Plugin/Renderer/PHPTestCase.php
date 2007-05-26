@@ -32,13 +32,12 @@
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: PHPTestCase.php 694 2007-01-12 02:13:31Z iteman $
+ * @version    SVN: $Id: PHPTestCase.php 786 2007-05-23 02:30:39Z iteman $
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      File available since Release 0.1.0
  */
 
-require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
 require_once 'Piece/Unity/Error.php';
@@ -53,7 +52,7 @@ require_once 'Piece/Unity/Config.php';
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.11.0
+ * @version    Release: 0.12.0
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      Class available since Release 0.1.0
@@ -74,7 +73,6 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
      */
 
     var $_target = 'PHP';
-    var $_errorCodeWhenTemplateNotExists = PIECE_UNITY_ERROR_NOT_FOUND;
 
     /**#@-*/
 

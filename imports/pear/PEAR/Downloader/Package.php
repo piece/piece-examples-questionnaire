@@ -15,7 +15,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Package.php,v 1.104 2007/01/14 21:11:54 cellog Exp $
+ * @version    CVS: $Id: Package.php,v 1.105.2.2 2007/04/17 22:43:23 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -49,7 +49,7 @@ define('PEAR_DOWNLOADER_PACKAGE_STATE', -1003);
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.1
+ * @version    Release: 1.5.4
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -694,8 +694,7 @@ class PEAR_Downloader_Package
                         } else {
                             if (isset($dep['optional']) && $dep['optional'] == 'yes') {
                                 $this->_downloader->log(2, $this->getShortName() .
-                                    ': Skipping ' . $group
-                                    . ' dependency "' .
+                                    ': Skipping optional dependency "' .
                                     $this->_registry->parsedPackageNameToString($dep, true) .
                                     '", no releases exist');
                                 continue;
@@ -1369,7 +1368,7 @@ class PEAR_Downloader_Package
             if (!@file_exists($param)) {
                 $test = explode('#', $param);
                 $group = array_pop($test);
-                if (file_exists(implode('#', $test))) {
+                if (@file_exists(implode('#', $test))) {
                     $this->setGroup($group);
                     $param = implode('#', $test);
                     $this->_explicitGroup = true;
@@ -1420,6 +1419,7 @@ class PEAR_Downloader_Package
                 $this->_downloader->popErrorHandling();
                 return $dir;
             }
+            $this->_downloader->log(3, 'Downloading "' . $param . '"');
             $file = $this->_downloader->downloadHttp($param, $this->_downloader->ui,
                 $dir, $callback);
             $this->_downloader->popErrorHandling();
