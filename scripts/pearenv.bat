@@ -1,7 +1,8 @@
 @ECHO OFF
 REM $Id$
 
-FOR /f "usebackq" %%p IN (`chdir`) DO SET TARGET_PATH=%%p\..
+chdir ..
+FOR /f "usebackq" %%p IN (`chdir`) DO SET TARGET_PATH=%%p
 
 @CALL pear.bat config-set bin_dir %TARGET_PATH%\imports\pear\bin
 @CALL pear.bat config-set doc_dir %TARGET_PATH%\imports\pear\docs
