@@ -4,7 +4,7 @@ REM $Id$
 chdir ..
 FOR /f "usebackq" %%p IN (`chdir`) DO SET TARGET_PATH=%%p
 
-@CALL pear.bat config-set bin_dir %TARGET_PATH%\imports\pear\bin
+@CALL pear.bat config-set bin_dir %TARGET_PATH%\scripts
 @CALL pear.bat config-set doc_dir %TARGET_PATH%\imports\pear\docs
 @CALL pear.bat config-set ext_dir %TARGET_PATH%\imports\pear\lib\php5
 @CALL pear.bat config-set php_dir %TARGET_PATH%\imports\pear
@@ -19,6 +19,6 @@ PAUSE
 
 REM Local Variables:
 REM mode: bat-generic
-REM coding: shift_jis
+REM coding: iso-8859-1
 REM indent-tabs-mode: nil
 REM End:
