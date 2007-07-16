@@ -28,16 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Examples_Questionnaire
- * @author     TAKESHITA Koki <takeshita@qnote.co.jp>
  * @copyright  2006-2007 Piece Project
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://pear.piece-framework.com/index.php?package=Piece_Examples_Questionnaire
- * @link       http://example.piece-framework.com/questionnaire/
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Flow/Action.php';
+require_once 'Piece/Unity/Service/FlowAction.php';
+require_once 'Piece/Unity/Service/FlexyElement.php';
 
 // {{{ QuestionnaireAction
 
@@ -45,15 +43,12 @@ require_once 'Piece/Flow/Action.php';
  * Questionnaire フローのアクションクラス
  *
  * @package    Piece_Examples_Questionnaire
- * @author     TAKESHITA Koki <takeshita@qnote.co.jp>
  * @copyright  2006-2007 Piece Project
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://pear.piece-framework.com/index.php?package=Piece_Examples_Questionnaire
- * @link       http://example.piece-framework.com/questionnaire/
  * @since      Class available since Release 0.1.0
  */
-class QuestionnaireAction extends Piece_Flow_Action
+class QuestionnaireAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -89,16 +84,15 @@ class QuestionnaireAction extends Piece_Flow_Action
     function setupForm2()
     {
         $this->_setupForm('Answer2');
-        $elements = $this->_getFormElements();
-        $elements['job']['_options'] = array('' => '選択してください',
-                                             '会社員' => '会社員',
-                                             '公務員' => '公務員',
-                                             '自営業' => '自営業',
-                                             '主婦・学生' => '主婦・学生',
-                                             'その他' => 'その他'
-                                             );
-        $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('_elements', $elements);
+        $flexyElement = &new Piece_Unity_Service_FlexyElement();
+        $flexyElement->setOptions('job',
+                                  array('' => '選択してください',
+                                        '会社員' => '会社員',
+                                        '公務員' => '公務員',
+                                        '自営業' => '自営業',
+                                        '主婦・学生' => '主婦・学生',
+                                        'その他' => 'その他')
+                                  );
     }
 
     function setupForm3()
@@ -135,8 +129,10 @@ class QuestionnaireAction extends Piece_Flow_Action
 
     function setupConfirmation()
     {
-        $this->_setupFormAttributes();
-        $viewElement = &$this->_payload->getViewElement();
+        $flexyElement = &new Piece_Unity_Service_FlexyElement();
+        $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
+
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElementByRef('questionnaireAnswer', $this->_questionnaireAnswer);
     }
 
@@ -153,49 +149,21 @@ class QuestionnaireAction extends Piece_Flow_Action
 
     function _setupForm($validationSetName)
     {
-        $this->_setupFormAttributes();
-        $results = &$this->_flow->getAttribute("__{$validationSetName}Results");
-        if ($results) {
-            $viewElement = &$this->_payload->getViewElement();
-            $elements = $this->_getFormElements();
+        $flexyElement = &new Piece_Unity_Service_FlexyElement();
+        $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
+        $validation = &$this->_context->getValidation();
+        if ($validation->hasResults($validationSetName)) {
+            $results = &$validation->getResults($validationSetName);
             foreach ($results->getFieldNames() as $field) {
-                $fieldValue = $this->_questionnaireAnswer->$field;
-                if (is_array($fieldValue)) {
-                    $field .= '[]';
-                }
-                $elements[$field]['_value'] = $fieldValue;
+                $flexyElement->setValue($field, $this->_questionnaireAnswer->$field);
             }
-
-            $viewElement->setElement('_elements', $elements);
         }
     }
 
     function _validate($validationSetName)
     {
-        $validation = $this->_payload->getValidation();
+        $validation = $this->_context->getValidation();
         return $validation->validate($validationSetName, $this->_questionnaireAnswer);
-    }
-
-    function _setupFormAttributes()
-    {
-        $view = $this->_flow->getView();
-        $elements = $this->_getFormElements();
-        $elements[$view]['_attributes']['action'] = $this->_payload->getScriptName();
-        $elements[$view]['_attributes']['method'] = 'post';
-        $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('_elements', $elements);
-    }
-
-    function _getFormElements()
-    {
-        $viewElement = &$this->_payload->getViewElement();
-        if (!$viewElement->hasElement('_elements')) {
-            $elements = array();
-        } else {
-            $elements = $viewElement->getElement('_elements');
-        }
-
-        return $elements;
     }
 
     /**#@-*/
