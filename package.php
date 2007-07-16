@@ -29,13 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Examples_Questionnaire
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://pear.piece-framework.com/index.php?package=Piece_Examples_Questionnaire
- * @link       http://example.piece-framework.com/questionnaire/
- * @see        PEAR_PackageFileManager2
  * @since      File available since Release 0.1.0
  */
 
@@ -43,25 +39,22 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '0.2.0';
+$releaseVersion = '1.0.0';
+$releaseStability = 'stable';
 $apiVersion = '0.1.0';
-$apiStability = 'beta';
-$releaseStability = 'beta';
-$notes = 'A new release of Piece_Examples_Questionnaire is now available.
-
-This release includes an enhancement so as to remove all class elements from Questionnaire.yaml.';
+$apiStability = 'stable';
+$notes = 'This is the first stable release of Piece_Examples_Questionnaire.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
                            'changelogoldtonew' => false,
                            'simpleoutput'      => true,
                            'baseinstalldir'    => '/',
-                           'packagefile'       => 'package2.xml',
+                           'packagefile'       => 'package.xml',
                            'packagedirectory'  => '.',
                            'dir_roles'         => array('docs' => 'doc',
                                                         'web' => 'data'),
-                           'ignore'            => array('imports/',
-                                                        'scripts/'))
+                           'ignore'            => array('package.php', 'package.xml', 'imports/', 'scripts/'))
                      );
 
 $package->setPackage('Piece_Examples_Questionnaire');
@@ -81,10 +74,10 @@ $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
 $package->setPearinstallerDep('1.4.3');
-$package->addPackageDepWithChannel('required', 'Piece_Unity', 'pear.piece-framework.com', '0.11.0');
-$package->addPackageDepWithChannel('required', 'HTML_Template_Flexy', 'pear.php.net', '1.2.5');
+$package->addPackageDepWithChannel('required', 'Piece_Unity', 'pear.piece-framework.com', '1.0.0');
+$package->addPackageDepWithChannel('required', 'Piece_Unity_Component_NullByteAttackPreventation', 'pear.piece-framework.com', '1.0.0');
+$package->addPackageDepWithChannel('required', 'Piece_Unity_Component_Flexy', 'pear.piece-framework.com', '1.0.0');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'iteman@users.sourceforge.net');
-$package->addIgnore(array('package.php', 'package2.xml'));
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
 $package->generateContents();
 
