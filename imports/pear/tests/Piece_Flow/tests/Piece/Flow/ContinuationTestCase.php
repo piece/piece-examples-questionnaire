@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: ContinuationTestCase.php 268 2006-12-13 05:31:24Z iteman $
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_Continuation
+ * @version    SVN: $Id: ContinuationTestCase.php 288 2007-06-10 21:13:42Z iteman $
  * @since      File available since Release 1.0.0
  */
 
@@ -50,12 +47,9 @@ require_once 'Piece/Flow/Action/Factory.php';
  * TestCase for Piece_Flow_Continuation
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_Continuation
+ * @version    Release: 1.10.0
  * @since      Class available since Release 1.0.0
  */
 class Piece_Flow_ContinuationTestCase extends PHPUnit_TestCase
@@ -439,15 +433,32 @@ class Piece_Flow_ContinuationTestCase extends PHPUnit_TestCase
         $continuation->shutdown();
         $continuation->invoke(new stdClass());
         $continuation->setAttribute('bar', 'baz');
+        $baz1 = &new stdClass();
+        $continuation->setAttributeByRef('baz', $baz1);
+        $continuation->shutdown();
+        $continuation->invoke(new stdClass());
 
         $this->assertTrue($continuation->hasAttribute('foo'));
         $this->assertEquals('bar', $continuation->getAttribute('foo'));
         $this->assertTrue($continuation->hasAttribute('bar'));
         $this->assertEquals('baz', $continuation->getAttribute('bar'));
+
+        $baz1->foo = 'bar';
+
+        $this->assertTrue(array_key_exists('foo', $baz1));
+        $this->assertEquals('bar', $baz1->foo);
+
+        $baz2 = &$continuation->getAttribute('baz');
+
+        $this->assertEquals(strtolower('stdClass'), strtolower(get_class($baz2)));
+
+        $this->assertTrue(array_key_exists('foo', $baz2));
+        $this->assertEquals('bar', $baz2->foo);
     }
 
     function testFailureToSetAttributeBeforeStartingFlow()
     {
+        Piece_Flow_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $continuation = &new Piece_Flow_Continuation(true);
         $continuation->setCacheDirectory(dirname(__FILE__));
         $continuation->addFlow('Counter', dirname(__FILE__) . '/Counter.yaml', true);
@@ -457,15 +468,18 @@ class Piece_Flow_ContinuationTestCase extends PHPUnit_TestCase
 
         $continuation->setAttribute('foo', 'bar');
 
-        $this->assertTrue(Piece_Flow_Error::hasErrors('warning'));
+        $this->assertTrue(Piece_Flow_Error::hasErrors('exception'));
 
         $error = Piece_Flow_Error::pop();
 
         $this->assertEquals(PIECE_FLOW_ERROR_INVALID_OPERATION, $error['code']);
+
+        Piece_Flow_Error::popCallback();
     }
 
     function testFailureToGetAttributeBeforeStartingFlow()
     {
+        Piece_Flow_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $continuation = &new Piece_Flow_Continuation(true);
         $continuation->setCacheDirectory(dirname(__FILE__));
         $continuation->addFlow('Counter', dirname(__FILE__) . '/Counter.yaml', true);
@@ -475,11 +489,13 @@ class Piece_Flow_ContinuationTestCase extends PHPUnit_TestCase
 
         $continuation->getAttribute('foo');
 
-        $this->assertTrue(Piece_Flow_Error::hasErrors('warning'));
+        $this->assertTrue(Piece_Flow_Error::hasErrors('exception'));
 
         $error = Piece_Flow_Error::pop();
 
         $this->assertEquals(PIECE_FLOW_ERROR_INVALID_OPERATION, $error['code']);
+
+        Piece_Flow_Error::popCallback();
     }
 
     function testStartingNewFlowAfterShuttingDownFlowInNonExclusiveMode()

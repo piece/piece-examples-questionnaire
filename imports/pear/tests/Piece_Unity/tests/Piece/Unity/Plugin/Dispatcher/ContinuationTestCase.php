@@ -29,15 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: ContinuationTestCase.php 744 2007-03-07 11:18:23Z iteman $
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Dispatcher_Continuation
+ * @version    SVN: $Id: ContinuationTestCase.php 907 2007-07-16 07:14:19Z iteman $
  * @since      File available since Release 0.1.0
  */
 
+require dirname(__FILE__) . '/../../../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Continuation.php';
 require_once 'Piece/Unity/Context.php';
@@ -52,12 +50,9 @@ require_once 'Piece/Unity/Error.php';
  * TestCase for Piece_Unity_Plugin_Dispatcher_Continuation
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Dispatcher_Continuation
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCase

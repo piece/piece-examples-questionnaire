@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Range.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Validator_Numeric
+ * @version    SVN: $Id: Range.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -46,12 +43,9 @@ require_once 'Piece/Right/Validator/Numeric.php';
  * A validator which is used to check whether a value is within a given range.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Validator_Numeric
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Right_Validator_Range extends Piece_Right_Validator_Numeric
@@ -90,7 +84,7 @@ class Piece_Right_Validator_Range extends Piece_Right_Validator_Numeric
             return false;
         }
 
-        $min = $this->getRule('min');
+        $min = $this->_getRule('min');
         if (!is_null($min)) {
             if ($value < $min) {
                 $this->_setMessage('min');
@@ -98,7 +92,7 @@ class Piece_Right_Validator_Range extends Piece_Right_Validator_Numeric
             }
         }
 
-        $max = $this->getRule('max');
+        $max = $this->_getRule('max');
         if (!is_null($max)) {
             if ($value > $max) {
                 $this->_setMessage('max');

@@ -4,7 +4,7 @@
 /**
  * PHP versions 4
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: XML4TestCase.php 241 2006-10-16 02:29:41Z iteman $
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_ConfigReader_XML4
+ * @version    SVN: $Id: XML4TestCase.php 299 2007-07-01 10:28:52Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -52,12 +49,9 @@ require_once 'Piece/Flow/Error.php';
  * TestCase for Piece_Flow_ConfigReader_XML4
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_ConfigReader_XML4
+ * @version    Release: 1.10.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Flow_ConfigReader_XML4TestCase extends Piece_Flow_ConfigReader_CompatibilityTest
@@ -81,27 +75,17 @@ class Piece_Flow_ConfigReader_XML4TestCase extends Piece_Flow_ConfigReader_Compa
      * @access public
      */
 
-    function setUp()
-    {
-        parent::setUp();
-        $this->_source = dirname(__FILE__) .'/../../../../data/Registration.xml';
-    }
-
     function testInvalidFormat()
     {
         Piece_Flow_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $reader = &$this->_getConfigReader($this->_getSource('broken'));
+        $config = &$reader->read();
 
-        $source = dirname(__FILE__) . '/broken.xml';
-        $xml = new Piece_Flow_ConfigReader_XML4($source);
-        $xml->configure(dirname(__FILE__));
-
+        $this->assertNull($config);
         $this->assertTrue(Piece_Flow_Error::hasErrors('exception'));
 
         $error = Piece_Flow_Error::pop();
 
-        $this->assertEquals(strtolower('Piece_Flow'),
-                            strtolower($error['package'])
-                            );
         $this->assertEquals(PIECE_FLOW_ERROR_INVALID_FORMAT, $error['code']);
 
         Piece_Flow_Error::popCallback();
@@ -113,10 +97,20 @@ class Piece_Flow_ConfigReader_XML4TestCase extends Piece_Flow_ConfigReader_Compa
      * @access private
      */
 
-    function _getConfig()
+    function &_getConfigReader($source)
     {
-        $xml = new Piece_Flow_ConfigReader_XML4($this->_source);
-        return $xml->configure(dirname(__FILE__));
+        $reader = &new Piece_Flow_ConfigReader_XML4($source, $this->_cacheDirectory);
+        return $reader;
+    }
+
+    function _doSetUp()
+    {
+        $this->_cacheDirectory = dirname(__FILE__) . '/XMLTestCase';
+    }
+
+    function _getSource($name)
+    {
+        return "{$this->_cacheDirectory}/$name.xml";
     }
 
     /**#@-*/

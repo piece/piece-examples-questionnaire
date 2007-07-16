@@ -15,7 +15,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Package.php,v 1.105.2.2 2007/04/17 22:43:23 cellog Exp $
+ * @version    CVS: $Id: Package.php,v 1.110 2007/05/31 03:51:08 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -24,6 +24,11 @@
  * exist within preferred_state, but releases do exist
  */
 define('PEAR_DOWNLOADER_PACKAGE_STATE', -1003);
+/**
+ * Error code when parameter initialization fails because no releases
+ * exist that will work with the existing PHP version
+ */
+define('PEAR_DOWNLOADER_PACKAGE_PHPVERSION', -1004);
 /**
  * Coordinates download parameters and manages their dependencies
  * prior to downloading them.
@@ -49,7 +54,7 @@ define('PEAR_DOWNLOADER_PACKAGE_STATE', -1003);
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.4
+ * @version    Release: 1.6.1
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -1147,6 +1152,47 @@ class PEAR_Downloader_Package
     }
 
     /**
+     * Detect duplicate package names with differing versions
+     * 
+     * If a user requests to install Date 1.4.6 and Date 1.4.7,
+     * for instance, this is a logic error.  This method
+     * detects this situation.
+     *
+     * @param array $params array of PEAR_Downloader_Package objects
+     * @param array $errorparams empty array
+     * @return array array of stupid duplicated packages in PEAR_Downloader_Package obejcts
+     */
+    function detectStupidDuplicates($params, &$errorparams)
+    {
+        $existing = array();
+        foreach ($params as $i => $param) {
+            if (!isset($existing[$param->getChannel() . '/' . $param->getPackage()])) {
+                $existing[$param->getChannel() . '/' . $param->getPackage()] = array();
+            }
+            if (!isset($existing[$param->getChannel() . '/' . $param->getPackage()]
+                [$param->getGroup()])) {
+                $existing[$param->getChannel() . '/' . $param->getPackage()]
+                    [$param->getGroup()] = array();
+            }
+            $existing[$param->getChannel() . '/' . $param->getPackage()]
+                [$param->getGroup()][] = $i;
+        }
+        $indices = array();
+        foreach ($existing as $package => $groups) {
+            foreach ($groups as $group => $dupes) {
+                if (count($dupes) > 1) {
+                    $indices = $indices + $dupes;
+                }
+            }
+        }
+        $indices = array_unique($indices);
+        foreach ($indices as $index) {
+            $errorparams[] = $params[$index];
+        }
+        return count($errorparams);
+    }
+
+    /**
      * @param array
      * @param bool ignore install groups - for final removal of dupe packages
      * @static
@@ -1706,6 +1752,21 @@ class PEAR_Downloader_Package
                           'channel' => $pname['channel'],
                           'version' => $info['version']));
             } else {
+                if (isset($info['php']) && $info['php']) {
+                    $err = PEAR::raiseError('Failed to download ' .
+                        $this->_registry->parsedPackageNameToString(
+                            array('channel' => $pname['channel'],
+                                  'package' => $pname['package']),
+                                true) .
+                        ', latest release is version ' . $info['php']['v'] .
+                        ', but it requires PHP version "' .
+                        $info['php']['m'] . '", use "' .
+                        $this->_registry->parsedPackageNameToString(
+                            array('channel' => $pname['channel'], 'package' => $pname['package'],
+                            'version' => $info['php']['v'])) . '" to install',
+                            PEAR_DOWNLOADER_PACKAGE_PHPVERSION);
+                    return $err;
+                }
                 // construct helpful error message
                 if (isset($pname['version'])) {
                     $vs = ', version "' . $pname['version'] . '"';

@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Image.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Image.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 1.3.0
  */
 require_once 'Piece/Right/Validator/File.php';
@@ -44,11 +42,9 @@ require_once 'Piece/Right/Validator/File.php';
  * A validator to check files are valid image files.
  *
  * @package    Piece_Right
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 1.3.0
  */
 class Piece_Right_Validator_Image extends Piece_Right_Validator_File

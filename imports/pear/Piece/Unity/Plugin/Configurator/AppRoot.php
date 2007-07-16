@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: AppRoot.php 783 2007-05-22 13:21:32Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: AppRoot.php 907 2007-07-16 07:14:19Z iteman $
  * @since      File available since Release 0.12.0
  */
 
@@ -47,11 +45,9 @@ require_once 'Piece/Unity/Error.php';
  * the top of the document tree of an application visible from the web.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.12.0
  */
 class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
@@ -90,7 +86,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
             $result = chdir($appRoot);
             if (!$result) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                        'Failed calling chdir() for the configuration point [ appRoot ] at the plugin [ ' . __CLASS__ . ' ].'
+                                        "Failed calling chdir() for the configuration point [ appRoot ] on the plugin [ {$this->_name} ]."
                                         );
                 return;
             }

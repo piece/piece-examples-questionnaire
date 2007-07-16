@@ -29,15 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: CommonTestCase.php 748 2007-03-08 18:09:40Z iteman $
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Common
+ * @version    SVN: $Id: CommonTestCase.php 909 2007-07-16 09:11:55Z iteman $
  * @since      File available since Release 0.12.0
  */
 
+require dirname(__FILE__) . '/../../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
@@ -50,12 +48,9 @@ require_once 'Piece/Unity/Config.php';
  * TestCase for Piece_Unity_Plugin_Common
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Common
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.12.0
  */
 class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
@@ -86,7 +81,7 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/CommonTestCase');
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
         $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
     }
 
@@ -123,6 +118,50 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
 
         $this->assertEquals('baz', $empty->_bar);
         $this->assertEquals(strtolower('CannotGetConfigurationWithPluginPrefixQux'), strtolower(get_class($empty->_baz)));
+    }
+
+    /**
+     * @since Method available since Release 1.0.0
+     */
+    function testExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        $plugin = &Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed');
+        $plugin->invoke();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
+    /**
+     * @since Method available since Release 1.0.0
+     */
+    function testExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        $plugin = &Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed');
+        $plugin->invoke();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/

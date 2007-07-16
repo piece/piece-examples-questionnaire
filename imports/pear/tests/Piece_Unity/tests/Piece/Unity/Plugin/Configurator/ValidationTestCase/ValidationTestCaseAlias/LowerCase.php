@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: LowerCase.php 728 2007-02-19 08:57:58Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: LowerCase.php 907 2007-07-16 07:14:19Z iteman $
  * @see        Piece_Unity_Plugin_Configurator_ValidationTestCase
  * @since      File available since Release 0.11.0
  */
@@ -44,11 +42,9 @@
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @see        Piece_Unity_Plugin_Configurator_ValidationTestCase
  * @since      Class available since Release 0.11.0
  */

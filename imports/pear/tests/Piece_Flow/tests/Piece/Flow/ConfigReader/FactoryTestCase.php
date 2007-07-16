@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FactoryTestCase.php 265 2006-12-09 10:46:35Z iteman $
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_ConfigReader_Factory
+ * @version    SVN: $Id: FactoryTestCase.php 300 2007-07-01 11:21:16Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -48,12 +45,9 @@ require_once 'Piece/Flow/Error.php';
  * TestCase for Piece_Flow_ConfigReader_Factory
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_ConfigReader_Factory
+ * @version    Release: 1.10.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Flow_ConfigReader_FactoryTestCase extends PHPUnit_TestCase
@@ -90,39 +84,35 @@ class Piece_Flow_ConfigReader_FactoryTestCase extends PHPUnit_TestCase
 
     function testGuessingFromFileExtension()
     {
-        $this->assertTrue(is_a(Piece_Flow_ConfigReader_Factory::factory('foo.yaml'),
-                               'Piece_Flow_ConfigReader_YAML')
-                          );
-        $this->assertTrue(is_a(Piece_Flow_ConfigReader_Factory::factory('foo.xml'),
-                               version_compare(phpversion(), '5.0.0', '>=') ?
-                               'Piece_Flow_ConfigReader_XML5' :
-                               'Piece_Flow_ConfigReader_XML4')
-                          );
+        $this->assertEquals(strtolower('Piece_Flow_ConfigReader_YAML'),
+                            strtolower(get_class(Piece_Flow_ConfigReader_Factory::factory('foo.yaml', null, null)))
+                            );
+        $this->assertEquals(strtolower(version_compare(phpversion(), '5.0.0', '>=') ? 'Piece_Flow_ConfigReader_XML5' : 'Piece_Flow_ConfigReader_XML4'),
+                            strtolower(get_class(Piece_Flow_ConfigReader_Factory::factory('foo.xml', null, null)))
+                            );
     }
 
     function testSpecifyingDriverType()
     {
-        $this->assertTrue(is_a(Piece_Flow_ConfigReader_Factory::factory('foo', 'YAML'),
-                               'Piece_Flow_ConfigReader_YAML')
-                          );
-        $this->assertTrue(is_a(Piece_Flow_ConfigReader_Factory::factory('foo', 'XML'),
-                               version_compare(phpversion(), '5.0.0', '>=') ?
-                               'Piece_Flow_ConfigReader_XML5' :
-                               'Piece_Flow_ConfigReader_XML4')
-                          );
+        $this->assertEquals(strtolower('Piece_Flow_ConfigReader_YAML'),
+                            strtolower(get_class(Piece_Flow_ConfigReader_Factory::factory('foo', 'YAML', null)))
+                            );
+        $this->assertEquals(strtolower(version_compare(phpversion(), '5.0.0', '>=') ? 'Piece_Flow_ConfigReader_XML5' : 'Piece_Flow_ConfigReader_XML4'),
+                            strtolower(get_class(Piece_Flow_ConfigReader_Factory::factory('foo', 'XML', null)))
+                            );
     }
 
-    function testNonExistentDriver()
+    function testNonExistingDriver()
     {
         Piece_Flow_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
-        @Piece_Flow_ConfigReader_Factory::factory('foo.bar');
+        @Piece_Flow_ConfigReader_Factory::factory('foo.bar', null, null);
 
         $this->assertTrue(Piece_Flow_Error::hasErrors('exception'));
 
         $error = Piece_Flow_Error::pop();
 
-        $this->assertEquals(PIECE_FLOW_ERROR_NOT_FOUND, $error['code']);
+        $this->assertEquals(PIECE_FLOW_ERROR_CANNOT_READ, $error['code']);
 
         Piece_Flow_Error::popCallback();
     }
@@ -131,15 +121,15 @@ class Piece_Flow_ConfigReader_FactoryTestCase extends PHPUnit_TestCase
     {
         Piece_Flow_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
-        $oldIncludePath = set_include_path(dirname(__FILE__) . '/../../..' . PATH_SEPARATOR . get_include_path());
+        $oldIncludePath = set_include_path(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
 
-        Piece_Flow_ConfigReader_Factory::factory('foo.bar', 'Baz');
+        Piece_Flow_ConfigReader_Factory::factory('foo.bar', 'Baz', null);
 
         $this->assertTrue(Piece_Flow_Error::hasErrors('exception'));
 
         $error = Piece_Flow_Error::pop();
 
-        $this->assertEquals(PIECE_FLOW_ERROR_INVALID_DRIVER, $error['code']);
+        $this->assertEquals(PIECE_FLOW_ERROR_NOT_FOUND, $error['code']);
 
         set_include_path($oldIncludePath);
         Piece_Flow_Error::popCallback();

@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: File.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: File.php 360 2007-06-09 10:04:01Z iteman $
  * @since      File available since Release 1.3.0
  */
 
@@ -45,11 +43,9 @@ require_once 'Piece/Right/Validator/Common.php';
  * A validator which is used to validate a file.
  *
  * @package    Piece_Right
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 1.3.0
  */
 class Piece_Right_Validator_File extends Piece_Right_Validator_Common
@@ -110,7 +106,7 @@ class Piece_Right_Validator_File extends Piece_Right_Validator_Common
         }
 
         for ($i = 0; $i < count($value['error']); $i++) {
-            if ($value['error'][$i]) {
+            if ($value['error'][$i] != UPLOAD_ERR_OK) {
                 return false;
             }
 
@@ -147,7 +143,7 @@ class Piece_Right_Validator_File extends Piece_Right_Validator_Common
             return false;
         }
 
-        $useMagic = $this->getRule('useMagic');
+        $useMagic = $this->_getRule('useMagic');
         if ($useMagic) {
             $mime = $this->_detectMimeType($filename);
             if ($mime === false) {
@@ -177,7 +173,7 @@ class Piece_Right_Validator_File extends Piece_Right_Validator_Common
     {
         $key = ucfirst($key);
 
-        $max = $this->getRule("max{$key}");
+        $max = $this->_getRule("max{$key}");
         if (!is_null($max)) {
             if ($value > $max) {
                 $this->_setMessage("max{$key}");
@@ -185,7 +181,7 @@ class Piece_Right_Validator_File extends Piece_Right_Validator_Common
             }
         }
 
-        $min = $this->getRule("min{$key}");
+        $min = $this->_getRule("min{$key}");
         if (!is_null($min)) {
             if ($value < $min) {
                 $this->_setMessage("min{$key}");
@@ -207,7 +203,7 @@ class Piece_Right_Validator_File extends Piece_Right_Validator_Common
      */
     function _validateMimeType($mime)
     {
-        $pattern = $this->getRule('mimetype');
+        $pattern = $this->_getRule('mimetype');
         if (is_null($pattern)) {
             return true;
         }

@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FutureDate.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: FutureDate.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 1.0.0
  */
 
@@ -46,11 +44,9 @@ require_once 'Piece/Right/Validator/Date.php';
  * value is later than current date.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 1.0.0
  */
 class Piece_Right_Validator_FutureDate extends Piece_Right_Validator_Date
@@ -90,7 +86,7 @@ class Piece_Right_Validator_FutureDate extends Piece_Right_Validator_Date
             return false;
         }
 
-        $allowCurrentDate = $this->getRule('allowCurrentDate');
+        $allowCurrentDate = $this->_getRule('allowCurrentDate');
 
         $currentTime = time();
         if (!$allowCurrentDate) {

@@ -29,15 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: URLTestCase.php 771 2007-05-21 02:22:48Z iteman $
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_URL
+ * @version    SVN: $Id: URLTestCase.php 872 2007-07-14 11:18:58Z iteman $
  * @since      File available since Release 0.9.0
  */
 
+require dirname(__FILE__) . '/../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/URL.php';
 require_once 'Piece/Unity/Context.php';
@@ -49,12 +47,9 @@ require_once 'Piece/Unity/Error.php';
  * TestCase for Piece_Unity_URL
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_URL
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.9.0
  */
 class Piece_Unity_URLTestCase extends PHPUnit_TestCase

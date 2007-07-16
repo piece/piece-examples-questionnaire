@@ -18,7 +18,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Package.php,v 1.122.2.1 2007/04/09 02:37:43 cellog Exp $
+ * @version    CVS: $Id: Package.php,v 1.124 2007/04/19 03:04:16 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -38,7 +38,7 @@ require_once 'PEAR/Command/Common.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.4
+ * @version    Release: 1.6.1
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -697,10 +697,8 @@ used for automated conversion or learning the format.
         }
         $tar = new Archive_Tar($params[0]);
         $tmpdir = System::mktemp('-d pearsign');
-        if (!$tar->extractList('package2.xml package.sig', $tmpdir)) {
-            if (!$tar->extractList('package.xml package.sig', $tmpdir)) {
-                return $this->raiseError("failed to extract tar file");
-            }
+        if (!$tar->extractList('package2.xml package.xml package.sig', $tmpdir)) {
+            return $this->raiseError("failed to extract tar file");
         }
         if (file_exists("$tmpdir/package.sig")) {
             return $this->raiseError("package already signed");
@@ -711,6 +709,9 @@ used for automated conversion or learning the format.
         }
         if (file_exists("$tmpdir/package.sig")) {
             unlink("$tmpdir/package.sig");
+        }
+        if (!file_exists("$tmpdir/$packagexml")) {
+            return $this->raiseError("Extracted file $tmpdir/$packagexml not found.");
         }
         $input = $this->ui->userDialog($command,
                                        array('GnuPG Passphrase'),
@@ -729,7 +730,11 @@ used for automated conversion or learning the format.
         if (pclose($gpg) || !file_exists("$tmpdir/package.sig")) {
             return $this->raiseError("gpg sign failed");
         }
-        $tar->addModify("$tmpdir/package.sig", '', $tmpdir);
+        if (!$tar->addModify("$tmpdir/package.sig", '', $tmpdir)) {
+            return $this->raiseError('failed adding signature to file');
+        }
+
+        $this->ui->outputData("Package signed.", $command);
         return true;
     }
 

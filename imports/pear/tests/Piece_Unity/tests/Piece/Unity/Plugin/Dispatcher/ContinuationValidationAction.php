@@ -29,16 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: ContinuationValidationAction.php 694 2007-01-12 02:13:31Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: ContinuationValidationAction.php 907 2007-07-16 07:14:19Z iteman $
  * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
  * @since      File available since Release 0.8.0
  */
 
-require_once 'Piece/Flow/Action.php';
+require_once 'Piece/Unity/Service/FlowAction.php';
 
 // {{{ ContinuationValidationAction
 
@@ -46,15 +44,13 @@ require_once 'Piece/Flow/Action.php';
  * An action class for ContinuationValidation.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
  * @since      Class available since Release 0.8.0
  */
-class ContinuationValidationAction extends Piece_Flow_Action
+class ContinuationValidationAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -78,8 +74,8 @@ class ContinuationValidationAction extends Piece_Flow_Action
     function validate()
     {
         $user = &new stdClass();
-        $this->_payload->setAttributeByRef('user', $user);
-        $validation = &$this->_payload->getValidation();
+        $this->_context->setAttributeByRef('user', $user);
+        $validation = &$this->_context->getValidation();
         $config = &$validation->getConfiguration();
         $config->addValidation('email', 'Email');
 

@@ -29,15 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: RequestTestCase.php 694 2007-01-12 02:13:31Z iteman $
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Request
+ * @version    SVN: $Id: RequestTestCase.php 872 2007-07-14 11:18:58Z iteman $
  * @since      File available since Release 0.1.0
  */
 
+require dirname(__FILE__) . '/../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Request.php';
 
@@ -47,12 +45,9 @@ require_once 'Piece/Unity/Request.php';
  * TestCase for Piece_Unity_Request
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Request
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_RequestTestCase extends PHPUnit_TestCase

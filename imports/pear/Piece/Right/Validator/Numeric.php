@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Numeric.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Numeric.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 1.3.0
  */
 
@@ -45,11 +43,9 @@ require_once 'Piece/Right/Validator/Common.php';
  * A validator which is used to check whether a value is a numeric.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 1.3.0
  */
 class Piece_Right_Validator_Numeric extends Piece_Right_Validator_Common
@@ -84,14 +80,14 @@ class Piece_Right_Validator_Numeric extends Piece_Right_Validator_Common
      */
     function validate($value)
     {
-        $allowDecimal     = $this->getRule('allowDecimal');
-        $allowOctal       = $this->getRule('allowOctal');
-        $allowHexadecimal = $this->getRule('allowHexadecimal');
+        $allowDecimal     = $this->_getRule('allowDecimal');
+        $allowOctal       = $this->_getRule('allowOctal');
+        $allowHexadecimal = $this->_getRule('allowHexadecimal');
 
-        $allowExponent = $this->getRule('allowExponent');
+        $allowExponent = $this->_getRule('allowExponent');
 
-        $useInteger = $this->getRule('useInteger');
-        $useFloat = $this->getRule('useFloat');
+        $useInteger = $this->_getRule('useInteger');
+        $useFloat = $this->_getRule('useFloat');
 
         if ($allowDecimal) {
             $useInteger = true;
@@ -216,7 +212,7 @@ class Piece_Right_Validator_Numeric extends Piece_Right_Validator_Common
      */
     function _isDecimal($value)
     {
-        return preg_match('/^[+-]?(?:[1-9][0-9]*|0)$/', $value);
+        return preg_match('/^[+-]?(?:[1-9][0-9]*|0)$/D', $value);
     }
 
     // }}}
@@ -230,7 +226,7 @@ class Piece_Right_Validator_Numeric extends Piece_Right_Validator_Common
      */
     function _isOctal($value)
     {
-        return preg_match('/^[+-]?0[0-7]+$/', $value);
+        return preg_match('/^[+-]?0[0-7]+$/D', $value);
     }
 
     // }}}
@@ -244,7 +240,7 @@ class Piece_Right_Validator_Numeric extends Piece_Right_Validator_Common
      */
     function _isHexadecimal($value)
     {
-        return preg_match('/^[+-]?0[xX][0-9a-fA-F]+$/', $value);
+        return preg_match('/^[+-]?0[xX][0-9a-fA-F]+$/D', $value);
     }
 
     // }}}
@@ -258,7 +254,7 @@ class Piece_Right_Validator_Numeric extends Piece_Right_Validator_Common
      */
     function _isFloat($value)
     {
-        return preg_match('/^[+-]?(?:[0-9]*\.[0-9]+|[0-9]+\.[0-9]*)$/', $value);
+        return preg_match('/^[+-]?(?:[0-9]*\.[0-9]+|[0-9]+\.[0-9]*)$/D', $value);
     }
 
     // }}}
@@ -272,7 +268,7 @@ class Piece_Right_Validator_Numeric extends Piece_Right_Validator_Common
      */
     function _isExponent($value)
     {
-        return preg_match('/^(?:[0-9]+|(?:[0-9]*\.[0-9]+|[0-9]+\.[0-9]*))[eE][+-]?[0-9]+$/', $value);
+        return preg_match('/^(?:[0-9]+|(?:[0-9]*\.[0-9]+|[0-9]+\.[0-9]*))[eE][+-]?[0-9]+$/D', $value);
     }
 
     /**#@-*/

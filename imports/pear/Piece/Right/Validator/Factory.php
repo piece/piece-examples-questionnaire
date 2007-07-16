@@ -29,15 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Factory.php 325 2007-02-18 10:50:12Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Factory.php 351 2007-06-07 11:30:31Z iteman $
  * @since      File available since Release 0.1.0
  */
 
 require_once 'Piece/Right/Error.php';
+require_once 'Piece/Right/ClassLoader.php';
 
 // {{{ GLOBALS
 
@@ -52,11 +51,9 @@ $GLOBALS['PIECE_RIGHT_Validator_Prefixes'] = array('Piece_Right_Validator');
  * A factory class for creating validator objects.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Right_Validator_Factory
@@ -91,21 +88,63 @@ class Piece_Right_Validator_Factory
      * @return mixed
      * @throws PIECE_RIGHT_ERROR_NOT_FOUND
      * @throws PIECE_RIGHT_ERROR_INVALID_VALIDATOR
+     * @throws PIECE_RIGHT_ERROR_CANNOT_READ
      */
     function &factory($validatorName)
     {
         if (!array_key_exists($validatorName, $GLOBALS['PIECE_RIGHT_Validator_Instances'])) {
-            $validatorClass = Piece_Right_Validator_Factory::_findValidatorClass($validatorName);
-            if (is_null($validatorClass)) {
-                Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_FOUND,
-                                        "The validator [ $validatorName ] not found in the following directories:\n" .
-                                        implode("\n", $GLOBALS['PIECE_RIGHT_Validator_Directories'])
-                                        );
-                $return = null;
-                return $return;
+            $found = false;
+            foreach ($GLOBALS['PIECE_RIGHT_Validator_Prefixes'] as $prefixAlias) {
+                $validatorClass = Piece_Right_Validator_Factory::_getValidatorClass($validatorName, $prefixAlias);
+                if (Piece_Right_ClassLoader::loaded($validatorClass)) {
+                    $found = true;
+                    break;
+                }
             }
 
-            $validator = &new $validatorClass();
+            if (!$found) {
+                foreach ($GLOBALS['PIECE_RIGHT_Validator_Directories'] as $validatorDirectory) {
+                    foreach ($GLOBALS['PIECE_RIGHT_Validator_Prefixes'] as $prefixAlias) {
+                        $validatorClass = Piece_Right_Validator_Factory::_getValidatorClass($validatorName, $prefixAlias);
+
+                        Piece_Right_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                        Piece_Right_ClassLoader::load($validatorClass, $validatorDirectory);
+                        Piece_Right_Error::popCallback();
+
+                        if (Piece_Right_Error::hasErrors('exception')) {
+                            $error = Piece_Right_Error::pop();
+                            if ($error['code'] == PIECE_RIGHT_ERROR_NOT_FOUND) {
+                                continue;
+                            }
+
+                            Piece_Right_Error::push(PIECE_RIGHT_ERROR_CANNOT_READ,
+                                                    "Failed to read the validator [ $validatorName ] for any reasons.",
+                                                    'exception',
+                                                    array(),
+                                                    $error
+                                                    );
+                            $return = null;
+                            return $return;
+                        }
+
+                        if (Piece_Right_ClassLoader::loaded($validatorClass)) {
+                            $found = true;
+                            break 2;
+                        }
+                    }
+                }
+
+                if (!$found) {
+                    Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_FOUND,
+                                            "The validator [ $validatorName ] not found in the following directories:\n" .
+                                            implode("\n", $GLOBALS['PIECE_RIGHT_Validator_Directories'])
+                                            );
+                    $return = null;
+                    return $return;
+                }
+            }
+
+            $validator = &new $validatorClass($prefixAlias);
             if (!is_subclass_of($validator, 'Piece_Right_Validator_Common')) {
                 Piece_Right_Error::push(PIECE_RIGHT_ERROR_INVALID_VALIDATOR,
                                         "The validator [ $validatorName ] is invalid."
@@ -164,101 +203,6 @@ class Piece_Right_Validator_Factory
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _loadFromDirectory()
-
-    /**
-     * Loads a validator from the given directory.
-     *
-     * @param string $validatorClass
-     * @param string $validatorDirectory
-     * @return boolean
-     * @static
-     */
-    function _loadFromDirectory($validatorClass, $validatorDirectory)
-    {
-        $file = "$validatorDirectory/" . str_replace('_', '/', $validatorClass) . '.php';
-
-        if (!file_exists($file)) {
-            Piece_Right_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_FOUND,
-                                    "The validator file [ $file ] for the class [ $validatorClass ] not found.",
-                                    'warning'
-                                    );
-            Piece_Right_Error::popCallback();
-            return false;
-        }
-
-        if (!is_readable($file)) {
-            Piece_Right_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_READABLE,
-                                    "The validator file [ $file ] was not readable.",
-                                    'warning'
-                                    );
-            Piece_Right_Error::popCallback();
-            return false;
-        }
-
-        if (!include_once $file) {
-            Piece_Right_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_FOUND,
-                                    "The validator file [ $file ] not found or was not readable.",
-                                    'warning'
-                                    );
-            Piece_Right_Error::popCallback();
-            return false;
-        }
-
-        return Piece_Right_Validator_Factory::_loaded($validatorClass);
-    }
-
-    // }}}
-    // {{{ _loaded()
-
-    /**
-     * Returns whether the given validator has already been loaded or not.
-     *
-     * @param string $validatorClass
-     * @return boolean
-     * @static
-     */
-    function _loaded($validatorClass)
-    {
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            return class_exists($validatorClass);
-        } else {
-            return class_exists($validatorClass, false);
-        }
-    }
-
-    // }}}
-    // {{{ _findValidatorClass()
-
-    /**
-     * Finds a validator class from the validator directories and the prefixes.
-     *
-     * @param string $validatorName
-     * @return string
-     */
-    function _findValidatorClass($validatorName)
-    {
-        foreach ($GLOBALS['PIECE_RIGHT_Validator_Prefixes'] as $prefixAlias) {
-            $validatorClass = Piece_Right_Validator_Factory::_getValidatorClass($validatorName, $prefixAlias);
-            if (Piece_Right_Validator_Factory::_loaded($validatorClass)) {
-                return $validatorClass;
-            }
-        }
-
-        foreach ($GLOBALS['PIECE_RIGHT_Validator_Directories'] as $validatorDirectory) {
-            foreach ($GLOBALS['PIECE_RIGHT_Validator_Prefixes'] as $prefixAlias) {
-                $validatorClass = Piece_Right_Validator_Factory::_getValidatorClass($validatorName, $prefixAlias);
-                if (Piece_Right_Validator_Factory::_loadFromDirectory($validatorClass, $validatorDirectory)) {
-                    return $validatorClass;
-                }
-            }
-        }
-    }
 
     // }}}
     // {{{ _getValidatorClass()

@@ -4,7 +4,7 @@
 /**
  * PHP versions 4
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: XML4.php 241 2006-10-16 02:29:41Z iteman $
+ * @version    SVN: $Id: XML4.php 303 2007-07-02 03:38:48Z iteman $
  * @link       http://www.php.net/manual/ja/ref.domxml.php
- * @link       http://piece-framework.com/piece-flow/
  * @since      File available since Release 0.1.0
  */
 
@@ -47,12 +45,10 @@ require_once 'Piece/Flow/Error.php';
  * A configuration reader for XML under PHP 4.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
+ * @version    Release: 1.10.0
  * @link       http://www.php.net/manual/ja/ref.domxml.php
- * @link       http://piece-framework.com/piece-flow/
  * @since      Class available since Release 0.1.0
  */
 class Piece_Flow_ConfigReader_XML4 extends Piece_Flow_ConfigReader_Common
@@ -110,13 +106,21 @@ class Piece_Flow_ConfigReader_XML4 extends Piece_Flow_ConfigReader_Common
         }
 
         $element = $dom->document_element();
-        $flow['firstState'] = $element->get_attribute('firstState');
+        if ($element->has_attribute('firstState')) {
+            $flow['firstState'] = $element->get_attribute('firstState');
+        }
 
         $lastState = $element->get_elements_by_tagname('lastState');
         if (count($lastState)) {
-            $flow['lastState'] = array('name' => $lastState[0]->get_attribute('name'),
-                                       'view' => $lastState[0]->get_attribute('view')
-                                       );
+            $flow['lastState'] = array();
+            if ($lastState[0]->has_attribute('name')) {
+                $flow['lastState']['name'] = $lastState[0]->get_attribute('name');
+            }
+
+            if ($lastState[0]->has_attribute('view')) {
+                $flow['lastState']['view'] = $lastState[0]->get_attribute('view');
+            }
+
             $flow['lastState'] = array_merge($flow['lastState'], $this->_parseState($lastState[0]));
         }
 
@@ -151,13 +155,17 @@ class Piece_Flow_ConfigReader_XML4 extends Piece_Flow_ConfigReader_Common
     {
         $viewStates = array();
 
-        for ($i = 0; $i < count($states); ++$i) {
+        for ($i = 0, $count = count($states); $i < $count; ++$i) {
             $viewState = array();
-            $viewState['name'] = $states[$i]->get_attribute('name');
-            $viewState['view'] = $states[$i]->get_attribute('view');
-            $viewState = array_merge($viewState,
-                                     $this->_parseState($states[$i])
-                                     );
+            if ($states[$i]->has_attribute('name')) {
+                $viewState['name'] = $states[$i]->get_attribute('name');
+            }
+
+            if ($states[$i]->has_attribute('view')) {
+                $viewState['view'] = $states[$i]->get_attribute('view');
+            }
+
+            $viewState = array_merge($viewState, $this->_parseState($states[$i]));
             $viewStates[] = $viewState;
         }
 
@@ -177,12 +185,13 @@ class Piece_Flow_ConfigReader_XML4 extends Piece_Flow_ConfigReader_Common
     {
         $actionStates = array();
 
-        for ($i = 0; $i < count($states); ++$i) {
+        for ($i = 0, $count = count($states); $i < $count; ++$i) {
             $actionState = array();
-            $actionState['name'] = $states[$i]->get_attribute('name');
-            $actionState = array_merge($actionState,
-                                       $this->_parseState($states[$i])
-                                       );
+            if ($states[$i]->has_attribute('name')) {
+                $actionState['name'] = $states[$i]->get_attribute('name');
+            }
+
+            $actionState = array_merge($actionState, $this->_parseState($states[$i]));
             $actionStates[] = $actionState;
         }
 
@@ -204,12 +213,15 @@ class Piece_Flow_ConfigReader_XML4 extends Piece_Flow_ConfigReader_Common
 
         $parsedTransitions = array();
         $transitions = $state->get_elements_by_tagname('transition');
-        for ($i = 0; $i < count($transitions); ++$i) {
+        for ($i = 0, $count = count($transitions); $i < $count; ++$i) {
             $parsedTransition = array();
-            $parsedTransition['event'] =
-                $transitions[$i]->get_attribute('event');
-            $parsedTransition['nextState'] =
-                $transitions[$i]->get_attribute('nextState');
+            if ($transitions[$i]->has_attribute('event')) {
+                $parsedTransition['event'] = $transitions[$i]->get_attribute('event');
+            }
+
+            if ($transitions[$i]->has_attribute('nextState')) {
+                $parsedTransition['nextState'] = $transitions[$i]->get_attribute('nextState');
+            }
 
             $action = $transitions[$i]->get_elements_by_tagname('action');
             if (count($action)) {
@@ -251,18 +263,25 @@ class Piece_Flow_ConfigReader_XML4 extends Piece_Flow_ConfigReader_Common
     /**
      * Parses the action.
      *
-     * @param DomElement $action
+     * @param DomElement $actionElement
      * @return array
      */
-    function _parseAction($action)
+    function _parseAction($actionElement)
     {
-        if (is_null($action)) {
-            return $action;
+        if (is_null($actionElement)) {
+            return $actionElement;
         }
 
-        return array('class' => $action->get_attribute('class'),
-                     'method' => $action->get_attribute('method')
-                     );
+        $action = array();
+        if ($actionElement->has_attribute('class')) {
+            $action['class'] = $actionElement->get_attribute('class');
+        }
+
+        if ($actionElement->has_attribute('method')) {
+            $action['method'] = $actionElement->get_attribute('method');
+        }
+
+        return $action;
     }
 
     /**#@-*/

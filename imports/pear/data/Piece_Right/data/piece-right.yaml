@@ -1,4 +1,4 @@
-# $Id: piece-right.yaml 298 2006-11-23 05:34:43Z iteman $
+# $Id: piece-right.yaml 340 2007-05-03 03:03:35Z iteman $
 name: config
 desc: the definition of Piece_Right configuration file.
 type: seq
@@ -65,12 +65,12 @@ sequence:
             type: seq
             required: no
             sequence:
-            - type: str
+              - type: str
           "turnOff":
             type: seq
             required: no
             sequence:
-            - type: str
+              - type: str
           "turnOnForceValidation": { type: bool, required: no }
       "description": { type: str, required: no }
       "pseudo":
@@ -84,5 +84,5 @@ sequence:
             type: seq
             required: no
             sequence:
-            - type: str
+              - type: str
       "forceValidation": { type: bool, required: no }

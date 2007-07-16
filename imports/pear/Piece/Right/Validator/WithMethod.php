@@ -29,15 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: WithMethod.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: WithMethod.php 358 2007-06-08 17:15:00Z iteman $
  * @since      File available since Release 0.3.0
  */
 
 require_once 'Piece/Right/Validator/Common.php';
+require_once 'Piece/Right/ClassLoader.php';
 
 // {{{ Piece_Right_Validator_WithMethod
 
@@ -46,11 +45,9 @@ require_once 'Piece/Right/Validator/Common.php';
  * arbitrary method.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.3.0
  */
 class Piece_Right_Validator_WithMethod extends Piece_Right_Validator_Common
@@ -84,14 +81,33 @@ class Piece_Right_Validator_WithMethod extends Piece_Right_Validator_Common
      *
      * @param mixed $value
      * @return boolean
+     * @throws PIECE_RIGHT_ERROR_NOT_READABLE
+     * @throws PIECE_RIGHT_ERROR_NOT_FOUND
+     * @throws PIECE_RIGHT_ERROR_CANNOT_READ
      */
     function validate($value)
     {
-        $class = $this->getRule('class');
-        $method = $this->getRule('method');
-        $isStatic = $this->getRule('isStatic');
+        $class = $this->_getRule('class');
+        $method = $this->_getRule('method');
+        $isStatic = $this->_getRule('isStatic');
         if (is_null($class) || is_null($method)) {
             return false;
+        }
+
+        if (!Piece_Right_ClassLoader::loaded($class)) {
+            Piece_Right_ClassLoader::load($class, $this->_getRule('directory'));
+            if (Piece_Right_Error::hasErrors('exception')) {
+                return;
+            }
+
+            if (!Piece_Right_ClassLoader::loaded($class)) {
+                Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_FOUND,
+                                        "The class [ $class ] not found in the loaded file.",
+                                        'exception',
+                                        array('validator' => __CLASS__)
+                                        );
+                return;
+            }
         }
 
         if ($isStatic) {
@@ -102,11 +118,16 @@ class Piece_Right_Validator_WithMethod extends Piece_Right_Validator_Common
         }
 
         if (!is_array($value)) {
-            return call_user_func($callback, $value, $this->_payload);
+            return call_user_func_array($callback,
+                                        array($value, &$this->_payload, &$this->_results)
+                                        );
         }
 
         foreach ($value as $target) {
-            if (!call_user_func($callback, $target, $this->_payload)) {
+            if (!call_user_func_array($callback,
+                                      array($target, &$this->_payload, &$this->_results)
+                                      )
+                ) {
                 return false;
             }
         }
@@ -133,6 +154,7 @@ class Piece_Right_Validator_WithMethod extends Piece_Right_Validator_Common
         $this->_addRule('class');
         $this->_addRule('method');
         $this->_addRule('isStatic', true);
+        $this->_addRule('directory');
     }
  
     /**#@-*/

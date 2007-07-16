@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Request.php 719 2007-02-19 03:36:13Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Request.php 821 2007-06-19 09:42:11Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -43,11 +41,9 @@
  * The parameter holder for client request data.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_Request
@@ -169,7 +165,7 @@ class Piece_Unity_Request
         }
 
         $pathInfoParameters = explode('/', trim($pathInfo, '/'));
-        for ($i = 0; $i < count($pathInfoParameters); $i += 2) {
+        for ($i = 0, $count = count($pathInfoParameters); $i < $count; $i += 2) {
             $this->_parameters[ $pathInfoParameters[$i] ] = @$pathInfoParameters[$i + 1];
         }
     }

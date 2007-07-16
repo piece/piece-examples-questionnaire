@@ -29,15 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: SessionStart.php 781 2007-05-22 12:32:04Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: SessionStart.php 907 2007-07-16 07:14:19Z iteman $
  * @since      File available since Release 0.5.0
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Interceptor_SessionStart
 
@@ -45,11 +44,9 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * An interceptor to start session automatically.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.5.0
  */
 class Piece_Unity_Plugin_Interceptor_SessionStart extends Piece_Unity_Plugin_Common
@@ -80,11 +77,18 @@ class Piece_Unity_Plugin_Interceptor_SessionStart extends Piece_Unity_Plugin_Com
      * Invokes the plugin specific code.
      *
      * @return boolean
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function invoke()
     {
         $session = &$this->_context->getSession();
         $session->start();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         return true;
     }
 

@@ -29,11 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Date.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Date.php 348 2007-06-06 17:17:41Z iteman $
+ * @see        http://ja.wikipedia.org/wiki/%E5%B9%B3%E6%88%90
+ * @see        http://ja.wikipedia.org/wiki/%E6%98%AD%E5%92%8C
+ * @see        http://ja.wikipedia.org/wiki/%E5%A4%A7%E6%AD%A3
+ * @see        http://ja.wikipedia.org/wiki/%E6%98%8E%E6%B2%BB
  * @since      File available since Release 0.3.0
  */
 
@@ -45,11 +47,13 @@ require_once 'Piece/Right/Validator/Common.php';
  * A validator which is used to check whether a value is a valid date.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
+ * @see        http://ja.wikipedia.org/wiki/%E5%B9%B3%E6%88%90
+ * @see        http://ja.wikipedia.org/wiki/%E6%98%AD%E5%92%8C
+ * @see        http://ja.wikipedia.org/wiki/%E5%A4%A7%E6%AD%A3
+ * @see        http://ja.wikipedia.org/wiki/%E6%98%8E%E6%B2%BB
  * @since      Class available since Release 0.3.0
  */
 class Piece_Right_Validator_Date extends Piece_Right_Validator_Common
@@ -88,44 +92,23 @@ class Piece_Right_Validator_Date extends Piece_Right_Validator_Common
      */
     function validate($value)
     {
-        $pattern = $this->getRule('pattern');
+        $pattern = $this->_getRule('pattern');
         if (!preg_match($pattern, $value, $matches)) {
             return false;
         }
 
-        $this->_month = $matches[ $this->getRule('patternMonthPosition') ];
-        $this->_day = $matches[ $this->getRule('patternDayPosition') ];
+        $this->_month = $matches[ $this->_getRule('patternMonthPosition') ];
+        $this->_day = $matches[ $this->_getRule('patternDayPosition') ];
 
-        $isJapaneseEra = $this->getRule('isJapaneseEra');
+        $isJapaneseEra = $this->_getRule('isJapaneseEra');
         if (!$isJapaneseEra) {
-            $this->_year = $matches[ $this->getRule('patternYearPosition') ];
+            $this->_year = $matches[ $this->_getRule('patternYearPosition') ];
+            return checkdate($this->_month, $this->_day, $this->_year);
         } else {
-            $era = $matches[ $this->getRule('patternEraPosition') ];
-            $eraMapping = array_flip($this->getRule('eraMapping'));
-            if (!array_key_exists($era, $eraMapping)) {
-                return false;
-            }
-
-            $year = $matches[ $this->getRule('patternYearPosition') ];
-            switch ($eraMapping[$era]) {
-            case 'showa':
-                $this->_year = 1926 - 1 + $year;
-                break;
-            case 'heisei':
-                $this->_year = 1989 - 1 + $year;
-                break;
-            case 'taisho':
-                $this->_year = 1912 - 1 + $year;
-                break;
-            case 'meiji':
-                $this->_year = 1868 - 1 + $year;
-                break;
-            default:
-                return false;
-            }
+            return $this->_validateDateOfJapaneseEra($matches[ $this->_getRule('patternEraPosition') ],
+                                                     $matches[ $this->_getRule('patternYearPosition') ]
+                                                     );
         }
-
-        return checkdate($this->_month, $this->_day, $this->_year);
     }
 
     /**#@-*/
@@ -159,7 +142,89 @@ class Piece_Right_Validator_Date extends Piece_Right_Validator_Common
         $this->_month = null;
         $this->_day = null;
     }
- 
+
+    // }}}
+    // {{{ _validateDateOfJapaneseEra()
+
+    /**
+     * Validates a date of Japanese era.
+     *
+     * @param string $era
+     * @param string $year
+     * @return boolean
+     * @since Method available since Release 1.6.0
+     */
+    function _validateDateOfJapaneseEra($era, $year)
+    {
+        $eraMapping = array_flip($this->_getRule('eraMapping'));
+        if (!array_key_exists($era, $eraMapping)) {
+            return false;
+        }
+
+        switch ($eraMapping[$era]) {
+        case 'heisei':
+            $this->_year = 1989 - 1 + $year;
+            break;
+        case 'showa':
+            $this->_year = 1926 - 1 + $year;
+            break;
+        case 'taisho':
+            $this->_year = 1912 - 1 + $year;
+            break;
+        case 'meiji':
+            $this->_year = 1868 - 1 + $year;
+            break;
+        default:
+            return false;
+        }
+
+        if (checkdate($this->_month, $this->_day, $this->_year)) {
+            $dateForComparison = sprintf('%04d%02d%02d', $this->_year, $this->_month, $this->_day);
+            switch ($eraMapping[$era]) {
+            case 'heisei':
+                if ($dateForComparison < '19890108') {
+                    return false;
+                }
+
+                break;
+            case 'showa':
+                if ($dateForComparison < '19261225') {
+                    return false;
+                }
+
+                if ($dateForComparison > '19890107') {
+                    return false;
+                }
+
+                break;
+            case 'taisho':
+                if ($dateForComparison < '19120730') {
+                    return false;
+                }
+
+                if ($dateForComparison > '19261225') {
+                    return false;
+                }
+
+                break;
+            case 'meiji':
+                if ($dateForComparison < '18680125') {
+                    return false;
+                }
+
+                if ($dateForComparison > '19120730') {
+                    return false;
+                }
+
+                break;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**#@-*/
 
     // }}}

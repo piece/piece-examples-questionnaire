@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Unity.php 694 2007-01-12 02:13:31Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Unity.php 807 2007-06-03 06:08:42Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -53,11 +51,9 @@ $GLOBALS['PIECE_UNITY_Root_Plugin'] = 'Root';
  * A single entry point for Piece_Unity applications.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity
@@ -116,6 +112,8 @@ class Piece_Unity
      * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function dispatch()
     {

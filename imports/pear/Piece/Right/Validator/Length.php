@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Length.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Length.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -46,11 +44,9 @@ require_once 'Piece/Right/Validator/Common.php';
  * given range.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Right_Validator_Length extends Piece_Right_Validator_Common
@@ -87,7 +83,7 @@ class Piece_Right_Validator_Length extends Piece_Right_Validator_Common
     {
         $length = strlen($value);
 
-        $min = $this->getRule('min');
+        $min = $this->_getRule('min');
         if (!is_null($min)) {
             if ($length < $min) {
                 $this->_setMessage('min');
@@ -95,7 +91,7 @@ class Piece_Right_Validator_Length extends Piece_Right_Validator_Common
             }
         }
 
-        $max = $this->getRule('max');
+        $max = $this->_getRule('max');
         if (!is_null($max)) {
             if ($length > $max) {
                 $this->_setMessage('max');

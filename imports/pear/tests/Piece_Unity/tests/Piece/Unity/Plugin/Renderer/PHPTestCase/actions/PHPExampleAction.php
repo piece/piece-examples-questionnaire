@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: PHPExampleAction.php 694 2007-01-12 02:13:31Z iteman $
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_PHP
+ * @version    SVN: $Id: PHPExampleAction.php 907 2007-07-16 07:14:19Z iteman $
+ * @see        Piece_Unity_Plugin_Renderer_PHPTestCase
  * @since      File available since Release 0.1.0
  */
 
@@ -44,12 +42,10 @@
  * Action class for the event 'PHPExample'.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_PHP
+ * @version    Release: 1.0.0
+ * @see        Piece_Unity_Plugin_Renderer_PHPTestCase
  * @since      Class available since Release 0.1.0
  */
 class PHPExampleAction

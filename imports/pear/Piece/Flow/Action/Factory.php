@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,15 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Factory.php 262 2006-12-06 16:40:37Z iteman $
- * @link       http://piece-framework.com/piece-flow/
+ * @version    SVN: $Id: Factory.php 292 2007-06-24 12:00:29Z iteman $
  * @since      File available since Release 1.0.0
  */
 
 require_once 'Piece/Flow/Error.php';
+require_once 'Piece/Flow/ClassLoader.php';
 
 // {{{ GLOBALS
 
@@ -51,11 +50,9 @@ $GLOBALS['PIECE_FLOW_Action_Directory'] = null;
  * A factory class for creating action objects.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
+ * @version    Release: 1.10.0
  * @since      Class available since Release 1.0.0
  */
 class Piece_Flow_Action_Factory
@@ -77,6 +74,7 @@ class Piece_Flow_Action_Factory
 
     /**#@+
      * @access public
+     * @static
      */
 
     // }}}
@@ -90,7 +88,7 @@ class Piece_Flow_Action_Factory
      * @throws PIECE_FLOW_ERROR_NOT_GIVEN
      * @throws PIECE_FLOW_ERROR_NOT_FOUND
      * @throws PIECE_FLOW_ERROR_NOT_READABLE
-     * @static
+     * @throws PIECE_FLOW_ERROR_CANNOT_READ
      */
     function &factory($class)
     {
@@ -101,8 +99,7 @@ class Piece_Flow_Action_Factory
                 return $return;
             }
 
-            $instance = &new $class();
-            $GLOBALS['PIECE_FLOW_Action_Instances'][$class] = &$instance;
+            $GLOBALS['PIECE_FLOW_Action_Instances'][$class] = &new $class();
         }
 
         return $GLOBALS['PIECE_FLOW_Action_Instances'][$class];
@@ -168,47 +165,25 @@ class Piece_Flow_Action_Factory
      * @throws PIECE_FLOW_ERROR_NOT_GIVEN
      * @throws PIECE_FLOW_ERROR_NOT_FOUND
      * @throws PIECE_FLOW_ERROR_NOT_READABLE
-     * @static
+     * @throws PIECE_FLOW_ERROR_CANNOT_READ
      */
     function load($class)
     {
-        if (Piece_Flow_Action_Factory::_loaded($class)) {
-            return;
-        }
-
         if (is_null($GLOBALS['PIECE_FLOW_Action_Directory'])) {
             Piece_Flow_Error::push(PIECE_FLOW_ERROR_NOT_GIVEN,
-                                   'The action directory was not given.'
+                                   'The action directory is not given.'
                                    );
             return;
         }
 
-        $file = "{$GLOBALS['PIECE_FLOW_Action_Directory']}/" . str_replace('_', '/', $class) . '.php';
+        Piece_Flow_ClassLoader::load($class, $GLOBALS['PIECE_FLOW_Action_Directory']);
+        if (Piece_Flow_Error::hasErrors('exception')) {
+            return;
+        }
 
-        if (!file_exists($file)) {
+        if (!Piece_Flow_ClassLoader::loaded($class)) {
             Piece_Flow_Error::push(PIECE_FLOW_ERROR_NOT_FOUND,
-                                   "The action file [ $file ] for the class [ $class ] not found."
-                                   );
-            return;
-        }
-
-        if (!is_readable($file)) {
-            Piece_Flow_Error::push(PIECE_FLOW_ERROR_NOT_READABLE,
-                                   "The action file [ $file ] was not readable."
-                                   );
-            return;
-        }
-
-        if (!include_once $file) {
-            Piece_Flow_Error::push(PIECE_FLOW_ERROR_NOT_FOUND,
-                                   "The action file [ $file ] not found or was not readable."
-                                   );
-            return;
-        }
-
-        if (!Piece_Flow_Action_Factory::_loaded($class)) {
-            Piece_Flow_Error::push(PIECE_FLOW_ERROR_NOT_FOUND,
-                                   "The action [ $class ] not defined in the file [ $file ]."
+                                   "The class [ $class ] not found in the loaded file."
                                    );
         }
     }
@@ -218,25 +193,6 @@ class Piece_Flow_Action_Factory
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _loaded()
-
-    /**
-     * Returns whether the given class has already been loaded or not.
-     *
-     * @param string $class
-     * @return boolean
-     * @static
-     */
-    function _loaded($class)
-    {
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            return class_exists($class);
-        } else {
-            return class_exists($class, false);
-        }
-    }
 
     /**#@-*/
 

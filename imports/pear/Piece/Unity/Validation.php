@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Validation.php 768 2007-05-21 02:14:03Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Validation.php 909 2007-07-16 09:11:55Z iteman $
  * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
  * @since      File available since Release 0.7.0
  */
@@ -53,11 +51,9 @@ require_once 'Piece/Right/Results.php';
  * The validation class for Piece_Unity applications.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
  * @since      Class available since Release 0.7.0
  */
@@ -210,12 +206,29 @@ class Piece_Unity_Validation
     // {{{ getResults()
 
     /**
-     * Gets the Piece_Right_Results object of the latest validation.
+     * Gets the Piece_Right_Results object of the given validation set or
+     * the latest validation.
      *
+     * @param string $validationSet
      * @return Piece_Right_Results
      */
-    function &getResults()
+    function &getResults($validationSet = null)
     {
+        $name = Piece_Unity_Validation::_createResultsName($validationSet);
+
+        $context = &Piece_Unity_Context::singleton();
+        $continuation = &$context->getContinuation();
+        if (!is_null($continuation)) {
+            if ($continuation->hasAttribute($name)) {
+                return $continuation->getAttribute($name);
+            }
+        } else {
+            $viewElement = &$context->getViewElement();
+            if ($viewElement->hasElement($name)) {
+                return $viewElement->getElement($name);
+            }
+        }
+
         return $this->_results;
     }
 
@@ -234,15 +247,11 @@ class Piece_Unity_Validation
     {
         $context = &Piece_Unity_Context::singleton();
         $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                      $results
-                                      );
+        $viewElement->setElementByRef(Piece_Unity_Validation::_createResultsName($validationSet), $results);
 
         $continuation = &$context->getContinuation();
         if (!is_null($continuation)) {
-            $continuation->setAttributeByRef(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                             $results
-                                             );
+            $continuation->setAttributeByRef(Piece_Unity_Validation::_createResultsName($validationSet), $results);
         }
     }
 
@@ -302,11 +311,46 @@ class Piece_Unity_Validation
         Piece_Right_Filter_Factory::addFilterPrefix($filterPrefix);
     }
 
+    // }}}
+    // {{{ hasResults()
+
+    /**
+     * Returns whether or not the Piece_Right_Results object of the given
+     * validation set or the latest validation exists.
+     *
+     * @param string $validationSet
+     * @return boolean
+     */
+    function hasResults($validationSet = null)
+    {
+        return (boolean)$this->getResults($validationSet);
+    }
+
     /**#@-*/
 
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _createResultsName()
+
+    /**
+     * Creates a field name from the given validation set that
+     * Piece_Right_Results will be stored by.
+     *
+     * @param string $validationSet
+     * @static
+     * @since Method available since Release 1.0.0
+     */
+    function _createResultsName($validationSet)
+    {
+        if (!is_null($validationSet)) {
+            return "__{$validationSet}Results";
+        } else {
+            return '__results';
+        }
+    }
 
     /**#@-*/
 

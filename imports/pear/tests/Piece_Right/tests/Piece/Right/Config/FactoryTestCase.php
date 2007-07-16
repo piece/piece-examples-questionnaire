@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FactoryTestCase.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Config_Factory
+ * @version    SVN: $Id: FactoryTestCase.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -49,12 +46,9 @@ require_once 'Cache/Lite/File.php';
  * TestCase for Piece_Right_Config_Factory
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Config_Factory
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Right_Config_FactoryTestCase extends PHPUnit_TestCase
@@ -139,8 +133,8 @@ class Piece_Right_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        dirname(__FILE__) . '/foo',
                                                        dirname(__FILE__)
                                                        );
-        $this->assertTrue(is_a($config, 'Piece_Right_Config'));
-        $this->assertTrue(Piece_Right_Error::hasErrors('warning'));
+        $this->assertNull($config);
+        $this->assertTrue(Piece_Right_Error::hasErrors('exception'));
 
         $error = Piece_Right_Error::pop();
 
@@ -157,7 +151,7 @@ class Piece_Right_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        dirname(__FILE__) . '/../../../../tests',
                                                        dirname(__FILE__)
                                                        );
-        $this->assertTrue(is_null($config));
+        $this->assertNull($config);
         $this->assertTrue(Piece_Right_Error::hasErrors('exception'));
 
         $error = Piece_Right_Error::pop();

@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: YAMLTestCase.php 241 2006-10-16 02:29:41Z iteman $
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_ConfigReader_YAML
+ * @version    SVN: $Id: YAMLTestCase.php 299 2007-07-01 10:28:52Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -47,12 +44,9 @@ require_once 'Piece/Flow/ConfigReader/YAML.php';
  * TestCase for Piece_Flow_ConfigReader_YAML
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow_ConfigReader_YAML
+ * @version    Release: 1.10.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Flow_ConfigReader_YAMLTestCase extends Piece_Flow_ConfigReader_CompatibilityTest
@@ -76,22 +70,26 @@ class Piece_Flow_ConfigReader_YAMLTestCase extends Piece_Flow_ConfigReader_Compa
      * @access public
      */
 
-    function setUp()
-    {
-        parent::setUp();
-        $this->_source = dirname(__FILE__) . '/../../../../data/Registration.yaml';
-    }
-
     /**#@-*/
 
     /**#@+
      * @access private
      */
 
-    function _getConfig()
+    function &_getConfigReader($source)
     {
-        $yaml = new Piece_Flow_ConfigReader_YAML($this->_source);
-        return $yaml->configure(dirname(__FILE__));
+        $reader = &new Piece_Flow_ConfigReader_YAML($source, $this->_cacheDirectory);
+        return $reader;
+    }
+
+    function _doSetUp()
+    {
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+    }
+
+    function _getSource($name)
+    {
+        return "{$this->_cacheDirectory}/$name.yaml";
     }
 
     /**#@-*/

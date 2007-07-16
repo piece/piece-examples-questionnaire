@@ -29,17 +29,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: PHPTestCase.php 786 2007-05-23 02:30:39Z iteman $
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_PHP
+ * @version    SVN: $Id: PHPTestCase.php 909 2007-07-16 09:11:55Z iteman $
  * @since      File available since Release 0.1.0
  */
 
+require dirname(__FILE__) . '/../../../../prepare.php';
+require_once 'Piece/Unity/Plugin/Renderer/HTMLTest.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
-require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Config.php';
 
@@ -49,15 +47,12 @@ require_once 'Piece/Unity/Config.php';
  * TestCase for Piece_Unity_Plugin_Renderer_PHP
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_PHP
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest
+class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_HTMLTest
 {
 
     // {{{ properties
@@ -89,11 +84,19 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
     function &_getConfig()
     {
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . '/PHPTestCase/actions');
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__) . '/PHPTestCase/templates/Content');
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', "{$this->_cacheDirectory}/actions");
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', "{$this->_cacheDirectory}/templates/Content");
         $config->setExtension('View', 'renderer', 'Renderer_PHP');
 
         return $config;
+    }
+
+    /**
+     * @since Method available since Release 1.0.0
+     */
+    function _doSetUp()
+    {
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     /**#@-*/

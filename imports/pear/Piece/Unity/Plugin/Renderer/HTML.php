@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: HTML.php 786 2007-05-23 02:30:39Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: HTML.php 907 2007-07-16 07:14:19Z iteman $
  * @since      File available since Release 0.9.0
  */
 
@@ -46,11 +44,9 @@ require_once 'Piece/Unity/Error.php';
  * An abstract renderer which is used to render HTML.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.9.0
  * @abstract
  */
@@ -82,6 +78,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      * Invokes the plugin specific code.
      *
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function invoke()
     {
@@ -149,6 +149,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      *
      * @param boolean $isLayout
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function _render($isLayout)
     {
@@ -176,9 +180,9 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
             }
 
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to render a HTML template with the plugin [ ' . get_class($this) . ' ].',
+                                    "Failed to render a HTML template with the plugin [ {$this->_name} ].",
                                     $level,
-                                    array('plugin' => __CLASS__),
+                                    array(),
                                     $error
                                     );
 
@@ -196,6 +200,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      *
      * @param boolean $isLayout
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      * @abstract
      */
     function _doRender($isLayout) {}

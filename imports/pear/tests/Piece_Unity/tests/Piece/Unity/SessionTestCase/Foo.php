@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Foo.php 694 2007-01-12 02:13:31Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Foo.php 813 2007-06-03 10:01:50Z iteman $
  * @see        Piece_Unity_SessionTestCase
  * @since      File available since Release 0.9.0
  */
@@ -44,11 +42,9 @@
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @see        Piece_Unity_SessionTestCase
  * @since      Class available since Release 0.9.0
  */

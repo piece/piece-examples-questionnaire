@@ -16,7 +16,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Install.php,v 1.123.2.6 2007/05/08 02:05:39 cellog Exp $
+ * @version    CVS: $Id: Install.php,v 1.132 2007/06/11 05:32:14 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -36,7 +36,7 @@ require_once 'PEAR/Command/Common.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.4
+ * @version    Release: 1.6.1
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -542,7 +542,6 @@ Run post-installation scripts in package <package>, if any exist.
                 $this->ui->outputData('using package root: ' . $options['packagingroot']);
             }
         }
- 
         $abstractpackages = array();
         $otherpackages = array();
         // parse params
@@ -628,6 +627,7 @@ Run post-installation scripts in package <package>, if any exist.
         }
         $errors = $this->downloader->getErrorMsgs();
         if (count($errors)) {
+            $err = array();
             $err['data'] = array();
             foreach ($errors as $error) {
                 $err['data'][] = array($error);
@@ -766,11 +766,12 @@ Run post-installation scripts in package <package>, if any exist.
                                 // explicitly chooses to install another group
                                 continue;
                             }
-                            $this->ui->outputData($param->getPackage() . ': Optional feature ' .
+                            $extrainfo[] = $param->getPackage() . ': Optional feature ' .
                                 $group['attribs']['name'] . ' available (' .
-                                $group['attribs']['hint'] . ')');
+                                $group['attribs']['hint'] . ')';
                         }
-                        $extrainfo[] = 'To install use "pear install ' .
+                        $extrainfo[] = $param->getPackage() .
+                            ': To install optional features use "pear install ' .
                             $reg->parsedPackageNameToString(
                                 array('package' => $param->getPackage(),
                                       'channel' => $param->getChannel()), true) .
@@ -788,7 +789,8 @@ Run post-installation scripts in package <package>, if any exist.
                         foreach ($list as $file) {
                             $extrainfo[] = $file;
                         }
-                        $extrainfo[] = 'Use "pear run-scripts ' . $pn . '" to run';
+                        $extrainfo[] = $param->getPackage() .
+                            ': Use "pear run-scripts ' . $pn . '" to finish setup.';
                         $extrainfo[] = 'DO NOT RUN SCRIPTS FROM UNTRUSTED SOURCES';
                     }
                 }
@@ -1029,7 +1031,13 @@ Run post-installation scripts in package <package>, if any exist.
                 $dest = $pwd;
             }
         }
-        $downloader->setDownloadDir($dest);
+        PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
+        $err = $downloader->setDownloadDir($dest);
+        PEAR::staticPopErrorHandling();
+        if (PEAR::isError($err)) {
+            return PEAR::raiseError('download directory "' . $dest .
+                '" is not writeable.');
+        }
         $result = &$downloader->download(array($params[0]));
         if (PEAR::isError($result)) {
             return $result;

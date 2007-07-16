@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FactoryTestCase.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Validator_Factory
+ * @version    SVN: $Id: FactoryTestCase.php 350 2007-06-07 10:53:48Z iteman $
+ * @since      File available since Release 0.1.0
  */
 
 require_once 'PHPUnit.php';
@@ -47,12 +45,10 @@ require_once 'Piece/Right/Error.php';
  * TestCase for Piece_Right_Validator_Factory
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Validator_Factory
+ * @version    Release: 1.6.0
+ * @since      Class available since Release 0.1.0
  */
 class Piece_Right_Validator_FactoryTestCase extends PHPUnit_TestCase
 {
@@ -70,7 +66,7 @@ class Piece_Right_Validator_FactoryTestCase extends PHPUnit_TestCase
      */
 
     var $_oldValidatorDirectories;
-    var $_oldPrefixes;
+    var $_oldValidatorPrefixes;
 
     /**#@-*/
 
@@ -83,12 +79,12 @@ class Piece_Right_Validator_FactoryTestCase extends PHPUnit_TestCase
         Piece_Right_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldValidatorDirectories = $GLOBALS['PIECE_RIGHT_Validator_Directories'];
         Piece_Right_Validator_Factory::addValidatorDirectory(dirname(__FILE__) . '/FactoryTestCase');
-        $this->_oldPrefixes = $GLOBALS['PIECE_RIGHT_Validator_Prefixes'];
+        $this->_oldValidatorPrefixes = $GLOBALS['PIECE_RIGHT_Validator_Prefixes'];
     }
 
     function tearDown()
     {
-        $GLOBALS['PIECE_RIGHT_Validator_Prefixes'] = $this->_oldPrefixes;
+        $GLOBALS['PIECE_RIGHT_Validator_Prefixes'] = $this->_oldValidatorPrefixes;
         Piece_Right_Validator_Factory::clearInstances();
         $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $this->_oldValidatorDirectories;
         Piece_Right_Error::clearErrors();

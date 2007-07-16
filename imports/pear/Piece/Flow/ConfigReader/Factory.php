@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,16 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MIYAI Fumihiko <fumichz@yahoo.co.jp>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Factory.php 241 2006-10-16 02:29:41Z iteman $
- * @link       http://piece-framework.com/piece-flow/
+ * @version    SVN: $Id: Factory.php 296 2007-07-01 07:05:23Z iteman $
  * @since      File available since Release 0.1.0
  */
 
 require_once 'Piece/Flow/Error.php';
+require_once 'Piece/Flow/ClassLoader.php';
 
 // {{{ Piece_Flow_ConfigReader_Factory
 
@@ -46,12 +44,9 @@ require_once 'Piece/Flow/Error.php';
  * An factory class for Piece_Flow_Config drivers.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MIYAI Fumihiko <fumichz@yahoo.co.jp>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
+ * @version    Release: 1.10.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Flow_ConfigReader_Factory
@@ -86,29 +81,42 @@ class Piece_Flow_ConfigReader_Factory
      * @param string $cacheDirectory
      * @return mixed
      * @throws PIECE_FLOW_ERROR_NOT_FOUND
-     * @throws PIECE_FLOW_ERROR_INVALID_DRIVER
+     * @throws PIECE_FLOW_ERROR_NOT_READABLE
+     * @throws PIECE_FLOW_ERROR_CANNOT_READ
      * @static
      */
-    function &factory($source, $driverName = null)
+    function &factory($source, $driverName, $cacheDirectory)
     {
         if (is_null($driverName)) {
-            $driverName = Piece_Flow_ConfigReader_Factory::_guessDriver($source);
+            $driverName = strtoupper(substr(strrchr($source, '.'), 1));
         }
 
         if ($driverName == 'XML') {
-            $driverName = Piece_Flow_ConfigReader_Factory::_getDriverForXML();
+            if (version_compare(phpversion(), '5.0.0', '>=')) {
+                $driverName = 'XML5';
+            } else {
+                $driverName = 'XML4';
+            }
         }
 
         $class = "Piece_Flow_ConfigReader_$driverName";
-        if (!class_exists($class)) {
-            Piece_Flow_ConfigReader_Factory::_loadDriver($class);
+        if (!Piece_Flow_ClassLoader::loaded($class)) {
+            Piece_Flow_ClassLoader::load($class);
             if (Piece_Flow_Error::hasErrors('exception')) {
+                $return = null;
+                return $return;
+            }
+
+            if (!Piece_Flow_ClassLoader::loaded($class)) {
+                Piece_Flow_Error::push(PIECE_FLOW_ERROR_NOT_FOUND,
+                                       "The class [ $class ] not found in the loaded file."
+                                       );
                 $return = null;
                 return $return;
             }
         }
 
-        $driver = &new $class($source);
+        $driver = &new $class($source, $cacheDirectory);
         return $driver;
     }
 
@@ -116,67 +124,7 @@ class Piece_Flow_ConfigReader_Factory
 
     /**#@+
      * @access private
-     * @static
      */
-
-    // }}}
-    // {{{ _guessDriver()
-
-    /**
-     * Guesses a driver from the given source.
-     *
-     * @param mixed $source
-     * @return string
-     */
-    function _guessDriver($source)
-    {
-        return strtoupper(substr(strrchr($source, '.'), 1));
-    }
-
-    // }}}
-    // {{{ _getDriverForXML()
-
-    /**
-     * Gets an appropriate XML driver according to the version number of PHP.
-     *
-     * @return string
-     */
-    function _getDriverForXML()
-    {
-        if (version_compare(phpversion(), '5.0.0', '>=')) {
-            return 'XML5';
-        }
-        
-        return 'XML4';
-    }
-
-    // }}}
-    // {{{ _loadDriver()
-
-    /**
-     * Loads the file corresponding to the given class.
-     *
-     * @param string $class
-     * @return string
-     * @throws PIECE_FLOW_ERROR_NOT_FOUND
-     * @throws PIECE_FLOW_ERROR_INVALID_DRIVER
-     */
-    function _loadDriver($class)
-    {
-        $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-        if (!include_once $file) {
-            Piece_Flow_Error::push(PIECE_FLOW_ERROR_NOT_FOUND,
-                                   "The driver file [ $file ] not found or was not readable."
-                                   );
-            return;
-        }
-
-        if (!class_exists($class)) {
-            Piece_Flow_Error::push(PIECE_FLOW_ERROR_INVALID_DRIVER,
-                                   "The driver [ $class ] not defined in the file [ $file ]."
-                                   );
-        }
-    }
 
     /**#@-*/
 

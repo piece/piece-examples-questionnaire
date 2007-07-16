@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Common.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Common.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -43,11 +41,9 @@
  * The base class for Piece_Right validators.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Right_Validator_Common
@@ -102,7 +98,7 @@ class Piece_Right_Validator_Common
     function setRules($rules = array())
     {
         foreach ($rules as $rule => $value) {
-            $this->setRule($rule, $value);
+            $this->_setRule($rule, $value);
         }
     }
 
@@ -114,19 +110,11 @@ class Piece_Right_Validator_Common
      *
      * @param string $rule
      * @param mixed  $value
+     * @deprecated Method deprecated in Release 1.6.0
      */
     function setRule($rule, $value)
     {
-        if (array_key_exists($rule, $this->_rules)) {
-            $this->_rules[$rule] = $value;
-            return;
-        }
-
-        if (preg_match('/^(.+)_message$/', $rule, $matches)
-            && array_key_exists($matches[1], $this->_messages)
-            ) {
-            $this->setRuleMessage($matches[1], $value);
-        }
+        $this->_setRule($rule, $value);
     }
 
     // }}}
@@ -175,10 +163,11 @@ class Piece_Right_Validator_Common
      *
      * @param string $rule
      * @return mixed
+     * @deprecated Method deprecated in Release 1.6.0
      */
     function getRule($rule)
     {
-        return $this->_rules[$rule];
+        return $this->_getRule($rule);
     }
 
     // }}}
@@ -189,12 +178,11 @@ class Piece_Right_Validator_Common
      *
      * @param string $rule
      * @param string $message
+     * @deprecated Method deprecated in Release 1.6.0
      */
     function setRuleMessage($rule, $message)
     {
-        if (array_key_exists($rule, $this->_messages)) {
-            $this->_messages[$rule] = $message;
-        }
+        $this->_setRuleMessage($rule, $message);
     }
 
     // }}}
@@ -322,7 +310,63 @@ class Piece_Right_Validator_Common
 
         return $message;
     }
+
+    // }}}
+    // {{{ _setRule()
+
+    /**
+     * Sets a validation rule to the given rule name.
+     *
+     * @param string $rule
+     * @param mixed  $value
+     * @since Method available since Release 1.6.0
+     */
+    function _setRule($rule, $value)
+    {
+        if (array_key_exists($rule, $this->_rules)) {
+            $this->_rules[$rule] = $value;
+            return;
+        }
+
+        if (preg_match('/^(.+)_message$/', $rule, $matches)
+            && array_key_exists($matches[1], $this->_messages)
+            ) {
+            $this->_setRuleMessage($matches[1], $value);
+        }
+    }
+
+    // }}}
+    // {{{ _setRuleMessage()
+
+    /**
+     * Sets an error message for the given rule name.
+     *
+     * @param string $rule
+     * @param string $message
+     * @since Method available since Release 1.6.0
+     */
+    function _setRuleMessage($rule, $message)
+    {
+        if (array_key_exists($rule, $this->_messages)) {
+            $this->_messages[$rule] = $message;
+        }
+    }
  
+    // }}}
+    // {{{ _getRule()
+
+    /**
+     * Gets the validation rule of the given rule name.
+     *
+     * @param string $rule
+     * @return mixed
+     * @since Method available since Release 1.6.0
+     */
+    function _getRule($rule)
+    {
+        return $this->_rules[$rule];
+    }
+
     /**#@-*/
 
     // }}}

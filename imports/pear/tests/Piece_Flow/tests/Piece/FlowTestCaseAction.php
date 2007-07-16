@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,13 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MIYAI Fumihiko <fumichz@yahoo.co.jp>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FlowTestCaseAction.php 252 2006-11-07 04:56:15Z iteman $
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow
+ * @version    SVN: $Id: FlowTestCaseAction.php 288 2007-06-10 21:13:42Z iteman $
+ * @see        Piece_FlowTestCase
  * @since      File available since Release 1.0.0
  */
 
@@ -47,13 +44,10 @@ require_once 'Piece/Flow/Action.php';
  * An action class for 'Registration'.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MIYAI Fumihiko <fumichz@yahoo.co.jp>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
- * @see        Piece_Flow
+ * @version    Release: 1.10.0
+ * @see        Piece_FlowTestCase
  * @since      Class available since Release 1.0.0
  */
 class Piece_FlowTestCaseAction extends Piece_Flow_Action

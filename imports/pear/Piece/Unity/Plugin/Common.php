@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Common.php 774 2007-05-22 10:32:16Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Common.php 853 2007-07-09 11:24:34Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -46,11 +44,9 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * The base class for Piece_Unity plug-ins.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_Plugin_Common
@@ -203,10 +199,23 @@ class Piece_Unity_Plugin_Common
      */
     function &_getExtension($extensionPoint)
     {
+        $extensionPoint = strtolower($extensionPoint);
+        if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The configuration point  [ $extensionPoint ] not found in the plug-in [ {$this->_name} ].",
+                                    'exception',
+                                    false,
+                                    false,
+                                    debug_backtrace()
+                                    );
+            $return = null;
+            return $return;
+        }
+
         $config = &$this->_context->getConfiguration();
-        $extension = $config->getExtension($this->_name, strtolower($extensionPoint));
+        $extension = $config->getExtension($this->_name, $extensionPoint);
         if (is_null($extension)) {
-            $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
+            $extension = $this->_extensionPoints[$extensionPoint];
         }
 
         if (!$extension || is_array($extension)) {
@@ -224,14 +233,27 @@ class Piece_Unity_Plugin_Common
      *
      * @param string $configurationPoint
      * @return string
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @since Method available since Release 0.12.0
      */
     function _getConfiguration($configurationPoint)
     {
+        $configurationPoint = strtolower($configurationPoint);
+        if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The configuration point  [ $configurationPoint ] not found in the plug-in [ {$this->_name} ].",
+                                    'exception',
+                                    false,
+                                    false,
+                                    debug_backtrace()
+                                    );
+            return;
+        }
+
         $config = &$this->_context->getConfiguration();
-        $configuration = $config->getConfiguration($this->_name, strtolower($configurationPoint));
+        $configuration = $config->getConfiguration($this->_name, $configurationPoint);
         if (is_null($configuration)) {
-            $configuration = $this->_configurationPoints[ strtolower($configurationPoint) ];
+            $configuration = $this->_configurationPoints[$configurationPoint];
         }
 
         return $configuration;

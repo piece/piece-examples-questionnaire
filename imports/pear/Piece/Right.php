@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Right.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Right.php 363 2007-06-09 16:49:50Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -49,10 +47,9 @@ require_once 'Piece/Right/Error.php';
  * A single entry point for Piece_Right validation sets.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Right
@@ -77,6 +74,7 @@ class Piece_Right
     var $_config;
     var $_payload;
     var $_currentFilter;
+    var $_currentFilterIsArrayable;
 
     /**#@-*/
 
@@ -120,6 +118,9 @@ class Piece_Right
      * @throws PIECE_RIGHT_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_RIGHT_ERROR_NOT_FOUND
      * @throws PIECE_RIGHT_ERROR_INVALID_FILTER
+     * @throws PIECE_RIGHT_ERROR_CANNOT_READ
+     * @throws PIECE_RIGHT_ERROR_INVALID_VALIDATOR
+     * @throws PIECE_RIGHT_ERROR_NOT_READABLE
      */
     function validate($validationSetName = null, $dynamicConfig = null)
     {
@@ -138,22 +139,11 @@ class Piece_Right
         }
 
         $this->_generatePseudoFields(array_keys($validationSet));
-
         $this->_watch(array_keys($validationSet));
+        $this->_validateFields($validationSet, false);
 
-        foreach ($validationSet as $field => $validations) {
-            $fieldValue = $this->_results->getFieldValue($field);
-
-            if (!$this->_config->forceValidation($field)) {
-                if (!$this->_checkValidationRequirement($field, $fieldValue)) {
-                    continue;
-                }
-            }
-
-            $this->_validate($field, $fieldValue, $validations);
-            if (Piece_Right_Error::hasErrors('exception')) {
-                return;
-            }
+        if (!$this->_results->countErrors()) {
+            $this->_validateFields($validationSet, true);
         }
 
         return !(boolean)$this->_results->countErrors();
@@ -300,6 +290,8 @@ class Piece_Right
      * @param array $fields
      * @since Method available since Release 0.3.0
      * @throws PIECE_RIGHT_ERROR_NOT_FOUND
+     * @throws PIECE_RIGHT_ERROR_INVALID_FILTER
+     * @throws PIECE_RIGHT_ERROR_CANNOT_READ
      */
     function _filter($fields)
     {
@@ -314,11 +306,19 @@ class Piece_Right
                     }
 
                     $this->_currentFilter = array(&$filter, 'filter');
+
+                    if (method_exists($filter, 'isArrayable')) {
+                        $this->_currentFilterIsArrayable = $filter->isArrayable();
+                    } else {
+                        $this->_currentFilterIsArrayable = false;
+                    }
+
+                    $fieldValue = $this->_invokeFilter($fieldValue);
                 } else {
                     $this->_currentFilter = $filterName;
+                    $this->_currentFilterIsArrayable = false;
+                    $fieldValue = $this->_invokeFilter($fieldValue);
                 }
-
-                $fieldValue = $this->_invokeFilter($fieldValue);
             }
 
             $this->_results->setFieldValue($field, $fieldValue);
@@ -438,21 +438,28 @@ class Piece_Right
     }
 
     // }}}
-    // {{{ _validate()
+    // {{{ _validateField()
 
     /**
-     * Validates the value by the validations of the field.
+     * Validates a field value by the given validations.
      *
-     * @param string $field
-     * @param string $value
-     * @param array  $validations
+     * @param string  $field
+     * @param string  $value
+     * @param array   $validations
+     * @param boolean $isFinals
      * @throws PIECE_RIGHT_ERROR_NOT_FOUND
      * @throws PIECE_RIGHT_ERROR_INVALID_VALIDATOR
+     * @throws PIECE_RIGHT_ERROR_CANNOT_READ
+     * @throws PIECE_RIGHT_ERROR_NOT_READABLE
      * @since Method available since Release 0.3.0
      */
-    function _validate($field, $value, $validations)
+    function _validateField($field, $value, $validations, $isFinals)
     {
         foreach ($validations as $validation) {
+            if ($validation['useInFinals'] != $isFinals) {
+                continue;
+            }
+
             $validator = &Piece_Right_Validator_Factory::factory($validation['validator']);
             if (Piece_Right_Error::hasErrors('exception')) {
                 return;
@@ -604,9 +611,45 @@ class Piece_Right
     {
         if (!is_array($value)) {
             return call_user_func($this->_currentFilter, $value);
+        } else {
+            if (!$this->_currentFilterIsArrayable) {
+                return array_map(array(&$this, __FUNCTION__), $value);
+            } else {
+                return call_user_func($this->_currentFilter, $value);
+            }
         }
+    }
 
-        return array_map(array(&$this, __FUNCTION__), $value);
+    // }}}
+    // {{{ _validateFields()
+
+    /**
+     * Validates value of all fields.
+     *
+     * @param array   $validationSet
+     * @param boolean $isFinals
+     * @throws PIECE_RIGHT_ERROR_NOT_FOUND
+     * @throws PIECE_RIGHT_ERROR_INVALID_VALIDATOR
+     * @throws PIECE_RIGHT_ERROR_CANNOT_READ
+     * @throws PIECE_RIGHT_ERROR_NOT_READABLE
+     * @since Method available since Release 1.6.0
+     */
+    function _validateFields($validationSet, $isFinals)
+    {
+        foreach ($validationSet as $field => $validations) {
+            $fieldValue = $this->_results->getFieldValue($field);
+
+            if (!$this->_config->forceValidation($field)) {
+                if (!$this->_checkValidationRequirement($field, $fieldValue)) {
+                    continue;
+                }
+            }
+
+            $this->_validateField($field, $fieldValue, $validations, $isFinals);
+            if (Piece_Right_Error::hasErrors('exception')) {
+                return;
+            }
+        }
     }
 
     /**#@-*/

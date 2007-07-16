@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Plugin.php 783 2007-05-22 13:21:32Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Plugin.php 907 2007-07-16 07:14:19Z iteman $
  * @since      File available since Release 0.11.0
  */
 
@@ -47,11 +45,9 @@ require_once 'Piece/Unity/Error.php';
  * A configurator for plug-in stuff.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.11.0
  */
 class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
@@ -80,17 +76,17 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function invoke()
     {
         $this->_setPluginDirectories();
-        $this->_setPluginPrefixes();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
 
-        /*
-         * Preloads Dispatcher_Continuation plug-in for restoring
-         * action instances in session.
-         */
-        Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
+        $this->_setPluginPrefixes();
     }
 
     /**#@-*/
@@ -116,18 +112,16 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
 
     /**
      * Sets plug-in directories.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setPluginDirectories()
     {
         $pluginDirectories = $this->_getConfiguration('pluginDirectories');
         if (!is_array($pluginDirectories)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ pluginDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ pluginDirectories ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -141,18 +135,16 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
 
     /**
      * Sets plug-in prefixes.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setPluginPrefixes()
     {
         $pluginPrefixes = $this->_getConfiguration('pluginPrefixes');
         if (!is_array($pluginPrefixes)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ pluginPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ pluginPrefixes ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 

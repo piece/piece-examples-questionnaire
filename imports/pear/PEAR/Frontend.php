@@ -15,7 +15,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Frontend.php,v 1.10.2.2 2007/04/11 19:18:40 cellog Exp $
+ * @version    CVS: $Id: Frontend.php,v 1.12 2007/05/31 03:51:08 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -40,7 +40,7 @@ $GLOBALS['_PEAR_FRONTEND_SINGLETON'] = null;
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.5.4
+ * @version    Release: 1.6.1
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -104,7 +104,7 @@ class PEAR_Frontend extends PEAR
     }
 
     /**
-     * Set the frontend object that will be used by calls to {@link singleton()}
+     * Set the frontend class that will be used by calls to {@link singleton()}
      *
      * Frontends are expected to be a descendant of PEAR_Frontend
      * @param PEAR_Frontend
@@ -137,15 +137,10 @@ class PEAR_Frontend extends PEAR
         if (file_exists($path) && is_readable($path)) {
             return true;
         }
-        $ipath = explode(PATH_SEPARATOR, ini_get('include_path'));
-        foreach ($ipath as $include) {
-            $test = realpath($include . DIRECTORY_SEPARATOR . $path);
-            if (!$test) { // support wrappers like phar (realpath just don't work with them)
-                $test = $include . DIRECTORY_SEPARATOR . $path;
-            }
-            if (file_exists($test) && is_readable($test)) {
-                return true;
-            }
+        $fp = @fopen($path, 'r', true);
+        if ($fp) {
+            fclose($fp);
+            return true;
         }
         return false;
     }

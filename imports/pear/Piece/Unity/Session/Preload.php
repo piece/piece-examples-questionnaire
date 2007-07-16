@@ -29,13 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Preload.php 694 2007-01-12 02:13:31Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Preload.php 837 2007-06-30 03:36:28Z iteman $
  * @since      File available since Release 0.9.0
  */
+
+require_once 'Piece/Unity/Plugin/Factory.php';
 
 // {{{ Piece_Unity_Session_Preload
 
@@ -43,11 +43,9 @@
  * A class *pre*loader for restoring objects in session.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.9.0
  */
 class Piece_Unity_Session_Preload
@@ -82,8 +80,10 @@ class Piece_Unity_Session_Preload
     function __wakeup()
     {
         foreach (array_keys($this->_services) as $service) {
-            foreach ($this->_services[$service]['classes'] as $id => $class) {
-                call_user_func($this->_services[$service]['callback'], $class, $id);
+            if (array_key_exists('classes', $this->_services[$service])) {
+                foreach ($this->_services[$service]['classes'] as $id => $class) {
+                    call_user_func($this->_services[$service]['callback'], $class, $id);
+                }
             }
         }
     }

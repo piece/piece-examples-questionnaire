@@ -17,7 +17,7 @@
 // |                                                                      |
 // +----------------------------------------------------------------------+
 //
-// $Id: Validator.php,v 1.99.2.2 2007/04/17 23:02:08 cellog Exp $
+// $Id: Validator.php,v 1.102 2007/06/10 04:16:51 cellog Exp $
 /**
  * Private validation class used by PEAR_PackageFile_v2 - do not use directly, its
  * sole purpose is to split up the PEAR/PackageFile/v2.php file to make it smaller
@@ -109,7 +109,7 @@ class PEAR_PackageFile_v2_Validator
               isset($test['dependencies']['required']) &&
               isset($test['dependencies']['required']['pearinstaller']) &&
               isset($test['dependencies']['required']['pearinstaller']['min']) &&
-              version_compare('1.5.4',
+              version_compare('1.6.1',
                 $test['dependencies']['required']['pearinstaller']['min'], '<')) {
             $this->_pearVersionTooLow($test['dependencies']['required']['pearinstaller']['min']);
             return false;
@@ -1007,6 +1007,11 @@ class PEAR_PackageFile_v2_Validator
             $dirname = $iscontents ? '<contents>' : $unknown;
         } else {
             $dirname = '<dir name="' . $list['attribs']['name'] . '">';
+            if (preg_match('~/\.\.?(/|\\z)|^\.\.?/~',
+                          str_replace('\\', '/', $list['attribs']['name']))) {
+                // file contains .. parent directory or . cur directory
+                $this->_invalidDirName($list['attribs']['name']);
+            }
         }
         $res = $this->_stupidSchemaValidate($struc, $list, $dirname);
         if ($allowignore && $res) {
@@ -1036,6 +1041,12 @@ class PEAR_PackageFile_v2_Validator
                         $ignored_or_installed[$file['attribs']['name']] = array();
                     }
                     $ignored_or_installed[$file['attribs']['name']][] = 1;
+                    if (preg_match('~/\.\.?(/|\\z)|^\.\.?/~',
+                                  str_replace('\\', '/', $file['attribs']['as']))) {
+                        // file contains .. parent directory or . cur directory references
+                        $this->_invalidFileInstallAs($file['attribs']['name'],
+                            $file['attribs']['as']);
+                    }
                 }
             }
             if (isset($list['ignore'])) {
@@ -1064,11 +1075,17 @@ class PEAR_PackageFile_v2_Validator
             }
             foreach ($list['file'] as $i => $file)
             {
-                if (isset($file['attribs']) && isset($file['attribs']['name']) &&
-                      $file['attribs']['name']{0} == '.' &&
-                        $file['attribs']['name']{1} == '/') {
-                    // name is something like "./doc/whatever.txt"
-                    $this->_invalidFileName($file['attribs']['name']);
+                if (isset($file['attribs']) && isset($file['attribs']['name'])) {
+                    if ($file['attribs']['name']{0} == '.' &&
+                          $file['attribs']['name']{1} == '/') {
+                        // name is something like "./doc/whatever.txt"
+                        $this->_invalidFileName($file['attribs']['name'], $dirname);
+                    }
+                    if (preg_match('~/\.\.?(/|\\z)|^\.\.?/~',
+                                  str_replace('\\', '/', $file['attribs']['name']))) {
+                        // file contains .. parent directory or . cur directory
+                        $this->_invalidFileName($file['attribs']['name'], $dirname);
+                    }
                 }
                 if (isset($file['attribs']) && isset($file['attribs']['role'])) {
                     if (!$this->_validateRole($file['attribs']['role'])) {
@@ -1329,7 +1346,7 @@ class PEAR_PackageFile_v2_Validator
         $this->_stack->push(__FUNCTION__, 'error',
             array('version' => $version),
             'This package.xml requires PEAR version %version% to parse properly, we are ' .
-            'version 1.5.4');
+            'version 1.6.1');
     }
 
     function _invalidTagOrder($oktags, $actual, $root)
@@ -1392,7 +1409,21 @@ class PEAR_PackageFile_v2_Validator
     {
         $this->_stack->push(__FUNCTION__, 'error', array(
             'file' => $file),
-            'File "%file%" cannot begin with "."');
+            'File "%file%" in directory "%dir%" cannot begin with "./" or contain ".."');
+    }
+
+    function _invalidFileInstallAs($file, $as)
+    {
+        $this->_stack->push(__FUNCTION__, 'error', array(
+            'file' => $file, 'as' => $as),
+            'File "%file%" <install as="%as%"/> cannot contain "./" or contain ".."');
+    }
+
+    function _invalidDirName($dir)
+    {
+        $this->_stack->push(__FUNCTION__, 'error', array(
+            'dir' => $file),
+            'Directory "%dir%" cannot begin with "./" or contain ".."');
     }
 
     function _filelistCannotContainFile($filelist)

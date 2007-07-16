@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FileTestCase.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Validator_File
+ * @version    SVN: $Id: FileTestCase.php 359 2007-06-09 07:28:31Z iteman $
  * @since      File available since Release 1.3.0
  */
 
@@ -58,13 +55,10 @@ if (function_exists('finfo_file')
  * TestCase for Piece_Right_Validator_File
  *
  * @package    Piece_Right
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
- * @see        Piece_Right_Validator_File
- * @since      File available since Release 1.3.0
+ * @version    Release: 1.6.0
+ * @since      Class available since Release 1.3.0
  */
 class Piece_Right_Validator_FileTestCase extends PHPUnit_TestCase
 {
@@ -131,7 +125,7 @@ class Piece_Right_Validator_FileTestCase extends PHPUnit_TestCase
                    'name' => $notExistFile,
                    'type' => 'text/plain',
                    'size' => 100,
-                   'error' => 0
+                   'error' => UPLOAD_ERR_OK
                    );
 
         $validator = &new Piece_Right_Validator_File();

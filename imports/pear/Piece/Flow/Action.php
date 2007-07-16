@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Action.php 252 2006-11-07 04:56:15Z iteman $
- * @link       http://piece-framework.com/piece-flow/
+ * @version    SVN: $Id: Action.php 288 2007-06-10 21:13:42Z iteman $
  * @since      File available since Release 1.5.0
  */
 
@@ -43,11 +41,9 @@
  * The base class for Piece_Flow actions.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
- * @link       http://piece-framework.com/piece-flow/
+ * @version    Release: 1.10.0
  * @since      Class available since Release 1.5.0
  */
 class Piece_Flow_Action
@@ -79,7 +75,8 @@ class Piece_Flow_Action
     // {{{ setFlow()
 
     /**
-     * Sets a Piece_Flow object to the current action.
+     * Sets the Piece_Flow object which is used by the flow execution
+     * in progress.
      *
      * @param Piece_Flow &$flow
      */
@@ -92,7 +89,7 @@ class Piece_Flow_Action
     // {{{ setPayload()
 
     /**
-     * Sets a user defined payload to the current action.
+     * Sets a user defined payload.
      *
      * @param mixed &$payload
      */
@@ -105,7 +102,7 @@ class Piece_Flow_Action
     // {{{ setEvent()
 
     /**
-     * Sets the current event name to the current action.
+     * Sets the current event name.
      *
      * @param string $event
      */

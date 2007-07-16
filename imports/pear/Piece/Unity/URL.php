@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: URL.php 771 2007-05-21 02:22:48Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: URL.php 863 2007-07-09 15:04:03Z iteman $
  * @since      File available since Release 0.9.0
  */
 
@@ -54,12 +51,9 @@ $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'] = array();
  * relative/absolute URL.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.9.0
  */
 class Piece_Unity_URL
@@ -244,7 +238,11 @@ class Piece_Unity_URL
 
                 $this->_url->host = $_SERVER['SERVER_NAME'];
                 $this->_url->port = $_SERVER['SERVER_PORT'];
-                $this->_url->path = preg_replace('!^' . $context->getProxyPath() . '!', '', $this->_url->path);
+
+                $proxyPath = $context->getProxyPath();
+                if (!is_null($proxyPath)) {
+                    $this->_url->path = preg_replace("!^$proxyPath!", '', $this->_url->path);
+                }
             }
         }
     }

@@ -4,7 +4,7 @@
 /**
  * PHP versions 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: XML5.php 253 2006-11-13 14:06:28Z iteman $
+ * @version    SVN: $Id: XML5.php 303 2007-07-02 03:38:48Z iteman $
  * @link       http://www.php.net/manual/ja/ref.dom.php
- * @link       http://piece-framework.com/piece-flow/
  * @since      File available since Release 0.1.0
  */
 
@@ -47,12 +45,10 @@ require_once 'Piece/Flow/Error.php';
  * A configuration reader for XML under PHP 5.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
+ * @version    Release: 1.10.0
  * @link       http://www.php.net/manual/ja/ref.dom.php
- * @link       http://piece-framework.com/piece-flow/
  * @since      Class available since Release 0.1.0
  */
 class Piece_Flow_ConfigReader_XML5 extends Piece_Flow_ConfigReader_Common
@@ -267,13 +263,21 @@ class Piece_Flow_ConfigReader_XML5 extends Piece_Flow_ConfigReader_Common
         }
 
         $element = $dom->getElementsByTagName('flow')->item(0);
-        $flow['firstState'] = $element->getAttribute('firstState');
+        if ($element->hasAttribute('firstState')) {
+            $flow['firstState'] = $element->getAttribute('firstState');
+        }
 
         $lastState = $element->getElementsByTagName('lastState')->item(0);
         if (!is_null($lastState)) {
-            $flow['lastState'] = array('name' => $lastState->getAttribute('name'),
-                                       'view' => $lastState->getAttribute('view')
-                                       );
+            $flow['lastState'] = array();
+            if ($lastState->hasAttribute('name')) {
+                $flow['lastState']['name'] = $lastState->getAttribute('name');
+            }
+
+            if ($lastState->hasAttribute('view')) {
+                $flow['lastState']['view'] = $lastState->getAttribute('view');
+            }
+
             $flow['lastState'] = array_merge($flow['lastState'], $this->_parseState($lastState));
         }
 
@@ -311,8 +315,14 @@ class Piece_Flow_ConfigReader_XML5 extends Piece_Flow_ConfigReader_Common
         for ($i = 0; $i < $states->length; ++$i) {
             $state = $states->item($i);
             $viewState = array();
-            $viewState['name'] = $state->getAttribute('name');
-            $viewState['view'] = $state->getAttribute('view');
+            if ($state->hasAttribute('name')) {
+                $viewState['name'] = $state->getAttribute('name');
+            }
+
+            if ($state->hasAttribute('view')) {
+                $viewState['view'] = $state->getAttribute('view');
+            }
+
             $viewState = array_merge($viewState, $this->_parseState($state));
             $viewStates[] = $viewState;
         }
@@ -336,10 +346,11 @@ class Piece_Flow_ConfigReader_XML5 extends Piece_Flow_ConfigReader_Common
         for ($i = 0; $i < $states->length; ++$i) {
             $state = $states->item($i);
             $actionState = array();
-            $actionState['name'] = $state->getAttribute('name');
-            $actionState = array_merge($actionState,
-                                       $this->_parseState($state)
-                                       );
+            if ($state->hasAttribute('name')) {
+                $actionState['name'] = $state->getAttribute('name');
+            }
+
+            $actionState = array_merge($actionState, $this->_parseState($state));
             $actionStates[] = $actionState;
         }
 
@@ -364,9 +375,13 @@ class Piece_Flow_ConfigReader_XML5 extends Piece_Flow_ConfigReader_Common
         for ($i = 0; $i < $transitions->length; ++$i) {
             $transition = $transitions->item($i);
             $parsedTransition = array();
-            $parsedTransition['event'] = $transition->getAttribute('event');
-            $parsedTransition['nextState'] =
-                $transition->getAttribute('nextState');
+            if ($transition->hasAttribute('event')) {
+                $parsedTransition['event'] = $transition->getAttribute('event');
+            }
+
+            if ($transition->hasAttribute('nextState')) {
+                $parsedTransition['nextState'] = $transition->getAttribute('nextState');
+            }
 
             $action = $transition->getElementsByTagName('action')->item(0);
             if (!is_null($action)) {
@@ -408,18 +423,25 @@ class Piece_Flow_ConfigReader_XML5 extends Piece_Flow_ConfigReader_Common
     /**
      * Parses the action.
      *
-     * @param DOMElement $action
+     * @param DOMElement $actionElement
      * @return array
      */
-    function _parseAction($action)
+    function _parseAction($actionElement)
     {
-        if (is_null($action)) {
-            return $action;
+        if (is_null($actionElement)) {
+            return $actionElement;
         }
 
-        return array('class' => $action->getAttribute('class'),
-                     'method' => $action->getAttribute('method')
-                     );
+        $action = array();
+        if ($actionElement->hasAttribute('class')) {
+            $action['class'] = $actionElement->getAttribute('class');
+        }
+
+        if ($actionElement->hasAttribute('method')) {
+            $action['method'] = $actionElement->getAttribute('method');
+        }
+
+        return $action;
     }
 
     /**#@-*/

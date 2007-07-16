@@ -30,11 +30,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: AllTestRunner.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: AllTestRunner.php 350 2007-06-07 10:53:48Z iteman $
  * @see        Stagehand_TestRunner_PHPUnitTestRunner::runAll()
  * @since      File available since Release 0.1.0
  */

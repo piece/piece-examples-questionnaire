@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: YAML.php 241 2006-10-16 02:29:41Z iteman $
+ * @version    SVN: $Id: YAML.php 294 2007-07-01 05:43:45Z iteman $
  * @link       http://spyc.sourceforge.net/
- * @link       http://piece-framework.com/piece-flow/
  * @since      File available since Release 0.1.0
  */
 
@@ -52,12 +50,10 @@ if (version_compare(phpversion(), '5.0.0', '<')) {
  * A configuration reader for YAML.
  *
  * @package    Piece_Flow
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.8.0
+ * @version    Release: 1.10.0
  * @link       http://spyc.sourceforge.net/
- * @link       http://piece-framework.com/piece-flow/
  * @since      Class available since Release 0.1.0
  */
 class Piece_Flow_ConfigReader_YAML extends Piece_Flow_ConfigReader_Common
@@ -101,8 +97,7 @@ class Piece_Flow_ConfigReader_YAML extends Piece_Flow_ConfigReader_Common
      */
     function _parseFile()
     {
-        $flow = Spyc::YAMLLoad($this->_source);
-        return $flow;
+        return Spyc::YAMLLoad($this->_source);
     }
 
     /**#@-*/

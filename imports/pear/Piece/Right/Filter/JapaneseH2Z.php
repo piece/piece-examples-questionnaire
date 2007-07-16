@@ -29,13 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: JapaneseH2Z.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: JapaneseH2Z.php 362 2007-06-09 16:36:33Z iteman $
  * @since      File available since Release 0.3.0
  */
+
+require_once 'Piece/Right/Filter/Common.php';
 
 // {{{ Piece_Right_Filter_JapaneseH2Z
 
@@ -44,14 +44,12 @@
  * kana.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.3.0
  */
-class Piece_Right_Filter_JapaneseH2Z
+class Piece_Right_Filter_JapaneseH2Z extends Piece_Right_Filter_Common
 {
 
     // {{{ properties

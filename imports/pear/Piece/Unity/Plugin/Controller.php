@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Controller.php 783 2007-05-22 13:21:32Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Controller.php 907 2007-07-16 07:14:19Z iteman $
  * @since      File available since Release 0.4.0
  */
 
@@ -48,11 +46,9 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * and fowards requests to the view handler.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.4.0
  */
 class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
@@ -86,6 +82,8 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
      * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
      */
     function invoke()
     {

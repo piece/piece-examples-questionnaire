@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Factory.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Factory.php 350 2007-06-07 10:53:48Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -54,11 +52,9 @@ if (version_compare(phpversion(), '5.0.0', '<')) {
  * A factory class for creating Piece_Right_Config objects.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Right_Config_Factory
@@ -105,15 +101,11 @@ class Piece_Right_Config_Factory
         }
 
         if (!file_exists($configDirectory)) {
-            Piece_Right_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_FOUND,
-                                    "The configuration directory [ $configDirectory ] not found.",
-                                    'warning'
+                                    "The configuration directory [ $configDirectory ] not found."
                                     );
-            Piece_Right_Error::popCallback();
-
-            $config = &new Piece_Right_Config();
-            return $config;
+            $return = null;
+            return $return;
         }
 
         $configFile = "$configDirectory/$validationSet.yaml";
@@ -128,7 +120,7 @@ class Piece_Right_Config_Factory
 
         if (!is_readable($configFile)) {
             Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_READABLE,
-                                    "The configuration file [ $configFile ] was not readable."
+                                    "The configuration file [ $configFile ] is not readable."
                                     );
             $return = null;
             return $return;
@@ -155,12 +147,10 @@ class Piece_Right_Config_Factory
             return $config;
         }
 
-        if (!is_readable($cacheDirectory)
-            || !is_writable($cacheDirectory)
-            ) {
+        if (!is_readable($cacheDirectory) || !is_writable($cacheDirectory)) {
             Piece_Right_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Right_Error::push(PIECE_RIGHT_ERROR_NOT_READABLE,
-                                    "The cache directory [ $cacheDirectory ] was not readable or writable.",
+                                    "The cache directory [ $cacheDirectory ] is not readable or writable.",
                                     'warning'
                                     );
             Piece_Right_Error::popCallback();
@@ -174,8 +164,7 @@ class Piece_Right_Config_Factory
             return $config;
         }
 
-        $config = &Piece_Right_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
-        return $config;
+        return Piece_Right_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
     }
 
     /**#@-*/
@@ -321,6 +310,17 @@ class Piece_Right_Config_Factory
                 $config->setForceValidation($validation['name'],
                                             $validation['forceValidation']
                                             );
+            }
+
+            if (array_key_exists('finals', $validation) && is_array($validation['finals'])) {
+                foreach ($validation['finals'] as $validator) {
+                    $config->addValidation($validation['name'],
+                                           $validator['name'],
+                                           (array)@$validator['rule'],
+                                           @$validator['message'],
+                                           true
+                                           );
+                }
             }
         }
 

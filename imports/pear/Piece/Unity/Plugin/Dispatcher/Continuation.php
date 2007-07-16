@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Continuation.php 783 2007-05-22 13:21:32Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Continuation.php 907 2007-07-16 07:14:19Z iteman $
  * @see        Piece_Flow_Continuation, Piece_Flow
  * @since      File available since Release 0.1.0
  */
@@ -55,15 +53,15 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
 
 /**
- * A dispatcher which dispatches requests to the continuation server based on
- * Piece_Flow.
+ * A dispatcher for stateful applications.
+ *
+ * This dispatcher starts a new continuation or continues with the current
+ * continuation, and returns a view string.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @see        Piece_Flow_Continuation, Piece_Flow
  * @since      Class available since Release 0.1.0
  */
@@ -96,9 +94,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     /**
      * Invokes the plugin specific code.
      *
-     * Starts a new continuation or continues with the current continuation,
-     * and returns a view string.
-     *
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
@@ -113,9 +108,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_continuation->invoke($this->_context, $this->_getConfiguration('bindActionsWithFlowExecution'));
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    "Failed to invoke the plugin [ {$this->_name} ].",
                                     'exception',
-                                    array('plugin' => __CLASS__),
+                                    array(),
                                     Piece_Flow_Error::pop()
                                     );
             return;
@@ -126,9 +121,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    "Failed to invoke the plugin [ {$this->_name} ].",
                                     'exception',
-                                    array('plugin' => __CLASS__),
+                                    array(),
                                     Piece_Flow_Error::pop()
                                     );
             return;
@@ -288,9 +283,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             Piece_Unity_Error::popCallback();
             if (Piece_Flow_Error::hasErrors('exception')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'Failed to configure the plugin [ ' . __CLASS__ . ' ].',
+                                        "Failed to configure the plugin [ {$this->_name}.",
                                         'exception',
-                                        array('plugin' => __CLASS__),
+                                        array(),
                                         Piece_Flow_Error::pop()
                                         );
                 $return = null;
@@ -351,6 +346,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             }
 
             $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+            $session->setPreloadCallback('_Dispatcher_Continuation', array('Piece_Unity_Plugin_Factory', 'factory'));
+            $session->addPreloadClass('_Dispatcher_Continuation', 'Dispatcher_Continuation');
         }
 
         $this->_context->setContinuation($continuation);

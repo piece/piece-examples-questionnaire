@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Factory.php 770 2007-05-21 02:17:13Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Factory.php 847 2007-07-05 14:29:13Z iteman $
  * @since      File available since Release 0.1.0
  */
 
@@ -54,11 +52,9 @@ if (version_compare(phpversion(), '5.0.0', '<')) {
  * A factory class for creating Piece_Unity_Config objects.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_Config_Factory
@@ -102,40 +98,28 @@ class Piece_Unity_Config_Factory
         }
 
         if (!file_exists($configDirectory)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration directory [ $configDirectory ] not found.",
-                                    'warning'
+                                    "The configuration directory [ $configDirectory ] not found."
                                     );
-            Piece_Unity_Error::popCallback();
-
-            $config = &new Piece_Unity_Config();
-            return $config;
+            $return = null;
+            return $return;
         }
 
         $configFile = "$configDirectory/piece-unity-config.yaml";
         if (!file_exists($configFile)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration file [ $configFile ] not found.",
-                                    'warning'
+                                    "The configuration file [ $configFile ] not found."
                                     );
-            Piece_Unity_Error::popCallback();
-
-            $config = &new Piece_Unity_Config();
-            return $config;
+            $return = null;
+            return $return;
         }
 
         if (!is_readable($configFile)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                    "The configuration file [ $configFile ] was not readable.",
-                                    'warning'
+                                    "The configuration file [ $configFile ] is not readable."
                                     );
-            Piece_Unity_Error::popCallback();
-
-            $config = &new Piece_Unity_Config();
-            return $config;
+            $return = null;
+            return $return;
         }
 
         if (is_null($cacheDirectory)) {
@@ -157,7 +141,7 @@ class Piece_Unity_Config_Factory
         if (!is_readable($cacheDirectory) || !is_writable($cacheDirectory)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                    "The cache directory [ $cacheDirectory ] was not readable or writable.",
+                                    "The cache directory [ $cacheDirectory ] is not readable or writable.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();

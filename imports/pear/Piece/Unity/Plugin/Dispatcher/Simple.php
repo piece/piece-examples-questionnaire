@@ -29,28 +29,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Simple.php 783 2007-05-22 13:21:32Z iteman $
- * @link       http://piece-framework.com/piece-unity/
+ * @version    SVN: $Id: Simple.php 907 2007-07-16 07:14:19Z iteman $
  * @since      File available since Release 0.1.0
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/ClassLoader.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_Simple
 
 /**
- * A dispatcher which dispatches requests to appropriate objects.
+ * A dispatcher for stateless applications.
+ *
+ * This plug-in invokes the action corresponding to an event if it exists,
+ * and returns an event name as a view string.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 0.12.0
- * @link       http://piece-framework.com/piece-unity/
+ * @version    Release: 1.0.0
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
@@ -80,11 +80,9 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      *
-     * Invokes the action corresponding to an event if it exists, and returns
-     * an event name as a view string.
-     *
      * @return string
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function invoke()
     {
@@ -96,28 +94,43 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
             return $event;
         }
 
-        $file = "$actionDirectory/" . str_replace('_', '/', $class) . '.php';
-        if (is_readable($file)) {
-            if (!include_once $file) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The action file [ $file ] not found or was not readable."
+        if (!Piece_Unity_ClassLoader::loaded($class)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_ClassLoader::load($class, $actionDirectory);
+            Piece_Unity_Error::popCallback();
+
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                $error = Piece_Unity_Error::pop();
+                if ($error['code'] == PIECE_UNITY_ERROR_NOT_FOUND) {
+                    return $event;
+                }
+
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
+                                        "Failed to read the action class [ $class ] for any reasons.",
+                                        'exception',
+                                        array(),
+                                        $error
                                         );
                 return;
             }
 
-            if (version_compare(phpversion(), '5.0.0', '<')) {
-                $result = class_exists($class);
-            } else {
-                $result = class_exists($class, false);
-            }
-
-            if ($result) {
-                $action = &new $class();
-                if (method_exists($action, 'invoke')) {
-                    $action->invoke($this->_context);
-                }
+            if (!Piece_Unity_ClassLoader::loaded($class)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The class [ $class ] not found in the loaded file."
+                                        );
+                return;
             }
         }
+
+        $action = &new $class();
+        if (!method_exists($action, 'invoke')) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The method invoke() not found in the class [ $class ]."
+                                    );
+            return;
+        }
+
+        $action->invoke($this->_context);
 
         return $event;
     }

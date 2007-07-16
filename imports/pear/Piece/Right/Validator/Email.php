@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Email.php 331 2007-02-18 14:59:45Z iteman $
- * @link       http://piece-framework.com/piece-right/
+ * @version    SVN: $Id: Email.php 350 2007-06-07 10:53:48Z iteman $
  * @link       http://www.ecodebank.com/details/?catid=8&catsubid=13&nid=7
  * @link       http://www.ietf.org/rfc/rfc0822.txt?number=822
  * @since      File available since Release 0.5.0
@@ -50,11 +48,9 @@ require_once 'Piece/Right/Validator/Common.php';
  * This code is based on Clay Loveless's validateEmailFormat.php.
  *
  * @package    Piece_Right
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
- * @link       http://piece-framework.com/piece-right/
+ * @version    Release: 1.6.0
  * @link       http://www.ecodebank.com/details/?catid=8&catsubid=13&nid=7
  * @link       http://www.ietf.org/rfc/rfc0822.txt?number=822
  * @since      Class available since Release 0.5.0
@@ -94,11 +90,11 @@ class Piece_Right_Validator_Email extends Piece_Right_Validator_Common
      */
     function validate($value)
     {
-        $allowDotBeforeAtmark = $this->getRule('allowDotBeforeAtmark');
+        $allowDotBeforeAtmark = $this->_getRule('allowDotBeforeAtmark');
         if (!$allowDotBeforeAtmark) {
-            return preg_match("/^{$this->_addrSpec}$/xS", $value);
+            return preg_match("/^{$this->_addrSpec}$/xSD", $value);
         } else {
-            return preg_match("/^{$this->_addrSpecForDotBeforeAtmark}$/xS", $value);
+            return preg_match("/^{$this->_addrSpecForDotBeforeAtmark}$/xSD", $value);
         }
     }
 
