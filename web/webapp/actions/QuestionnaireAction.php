@@ -76,12 +76,12 @@ class QuestionnaireAction extends Piece_Unity_Service_FlowAction
         $this->_questionnaireAnswer = &new stdClass();
     }
 
-    function setupForm1()
+    function doActivityOnDisplayForm1()
     {
         $this->_setupForm('Answer1');
     }
 
-    function setupForm2()
+    function doActivityOnDisplayForm2()
     {
         $this->_setupForm('Answer2');
         $flexyElement = &new Piece_Unity_Service_FlexyElement();
@@ -95,39 +95,39 @@ class QuestionnaireAction extends Piece_Unity_Service_FlowAction
                                   );
     }
 
-    function setupForm3()
+    function doActivityOnDisplayForm3()
     {
         $this->_setupForm('Answer3');
     }
 
-    function validateAnswer1()
+    function doProcessAnswer1FromDisplayForm1()
     {
         if ($this->_validate('Answer1')) {
-            return 'goDisplayForm2FromProcessAnswer1';
+            return 'DisplayForm2FromProcessAnswer1';
         } else {
-            return 'goDisplayForm1FromProcessAnswer1';
+            return 'DisplayForm1FromProcessAnswer1';
         }
     }
 
-    function validateAnswer2()
+    function doProcessAnswer2FromDisplayForm2()
     {
         if ($this->_validate('Answer2')) {
-            return 'goDisplayForm3FromProcessAnswer2';
+            return 'DisplayForm3FromProcessAnswer2';
         } else {
-            return 'goDisplayForm2FromProcessAnswer2';
+            return 'DisplayForm2FromProcessAnswer2';
         }
     }
 
-    function validateAnswer3()
+    function doProcessAnswer3FromDisplayForm3()
     {
         if ($this->_validate('Answer3')) {
-            return 'goDisplayConfirmationFromProcessAnswer3';
+            return 'DisplayConfirmationFromProcessAnswer3';
         } else {
-            return 'goDisplayForm3FromProcessAnswer3';
+            return 'DisplayForm3FromProcessAnswer3';
         }
     }
 
-    function setupConfirmation()
+    function doActivityOnDisplayConfirmation()
     {
         $flexyElement = &new Piece_Unity_Service_FlexyElement();
         $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
@@ -136,9 +136,9 @@ class QuestionnaireAction extends Piece_Unity_Service_FlowAction
         $viewElement->setElementByRef('questionnaireAnswer', $this->_questionnaireAnswer);
     }
 
-    function registerAnswer()
+    function doProcessRegisterFromDisplayConfirmation()
     {
-        return 'goDisplayFinishFromProcessRegister';
+        return 'DisplayFinishFromProcessRegister';
     }
 
     /**#@-*/

@@ -27,86 +27,88 @@
 
 firstState: DisplayForm1
 
-lastState: { name: DisplayFinish, view: Finish }
+lastState:
+  name: DisplayFinish
+  view: Finish
 
 viewState:
 
   - name: DisplayForm1
     view: Form1
     activity:
-      method: setupForm1
+      method: doActivityOnDisplayForm1
     transition:
-      - event: answer1
+      - event: ProcessAnswer1FromDisplayForm1
         nextState: ProcessAnswer1
         action:
-          method: validateAnswer1
+          method: doProcessAnswer1FromDisplayForm1
 
   - name: DisplayForm2
     view: Form2
     activity:
-      method: setupForm2
+      method: doActivityOnDisplayForm2
     transition:
-      - event: answer2
+      - event: ProcessAnswer2FromDisplayForm2
         nextState: ProcessAnswer2
         action:
-          method: validateAnswer2
-      - event: goDisplayForm1FromDisplayForm2
+          method: doProcessAnswer2FromDisplayForm2
+      - event: DisplayForm1FromDisplayForm2
         nextState: DisplayForm1   
 
   - name: DisplayForm3
     view: Form3
     activity:
-      method: setupForm3
+      method: doActivityOnDisplayForm3
     transition:
-      - event: answer3
+      - event: ProcessAnswer3FromDisplayForm3
         nextState: ProcessAnswer3
         action:
-          method: validateAnswer3
-      - event: goDisplayForm2FromDisplayForm3
+          method: doProcessAnswer3FromDisplayForm3
+      - event: DisplayForm2FromDisplayForm3
         nextState: DisplayForm2
 
   - name: DisplayConfirmation
     view: Confirmation
     activity:
-      method: setupConfirmation
+      method: doActivityOnDisplayConfirmation
     transition:
-      - event: goDisplayForm1FromDisplayConfirmation
+      - event: DisplayForm1FromDisplayConfirmation
         nextState: DisplayForm1
-      - event: goDisplayForm2FromDisplayConfirmation
+      - event: DisplayForm2FromDisplayConfirmation
         nextState: DisplayForm2
-      - event: goDisplayForm3FromDisplayConfirmation
+      - event: DisplayForm3FromDisplayConfirmation
         nextState: DisplayForm3
-      - event: register
+      - event: ProcessRegisterFromDisplayConfirmation
         nextState: ProcessRegister
         action:
-          method: registerAnswer
+          method: doProcessRegisterFromDisplayConfirmation
 
 actionState:
 
   - name: ProcessAnswer1
     transition:
-      - event: goDisplayForm2FromProcessAnswer1
+      - event: DisplayForm2FromProcessAnswer1
         nextState: DisplayForm2
-      - event: goDisplayForm1FromProcessAnswer1
+      - event: DisplayForm1FromProcessAnswer1
         nextState: DisplayForm1
 
   - name: ProcessAnswer2
     transition:
-      - event: goDisplayForm3FromProcessAnswer2
+      - event: DisplayForm3FromProcessAnswer2
         nextState: DisplayForm3
-      - event: goDisplayForm2FromProcessAnswer2
+      - event: DisplayForm2FromProcessAnswer2
         nextState: DisplayForm2
 
   - name: ProcessAnswer3
     transition:
-      - event: goDisplayConfirmationFromProcessAnswer3
+      - event: DisplayConfirmationFromProcessAnswer3
         nextState: DisplayConfirmation
-      - event: goDisplayForm3FromProcessAnswer3
+      - event: DisplayForm3FromProcessAnswer3
         nextState: DisplayForm3
 
   - name: ProcessRegister
     transition:
-      - event: goDisplayFinishFromProcessRegister
+      - event: DisplayFinishFromProcessRegister
         nextState: DisplayFinish
 
 # Local Variables:
