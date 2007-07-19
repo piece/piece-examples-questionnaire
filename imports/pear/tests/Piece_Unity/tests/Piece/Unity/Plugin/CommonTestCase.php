@@ -31,11 +31,11 @@
  * @package    Piece_Unity
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: CommonTestCase.php 909 2007-07-16 09:11:55Z iteman $
+ * @version    SVN: $Id: CommonTestCase.php 940 2007-07-18 11:12:19Z iteman $
  * @since      File available since Release 0.12.0
  */
 
-require dirname(__FILE__) . '/../../../prepare.php';
+require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';

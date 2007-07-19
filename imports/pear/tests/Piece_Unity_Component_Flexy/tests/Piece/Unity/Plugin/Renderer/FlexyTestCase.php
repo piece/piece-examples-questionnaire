@@ -32,11 +32,11 @@
  * @subpackage Piece_Unity_Component_Flexy
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: FlexyTestCase.php 905 2007-07-15 15:30:01Z iteman $
+ * @version    SVN: $Id: FlexyTestCase.php 942 2007-07-18 12:46:40Z iteman $
  * @since      File available since Release 1.0.0
  */
 
-require dirname(__FILE__) . '/../../../../prepare.php';
+require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
 require_once 'Piece/Unity/Plugin/Renderer/HTMLTest.php';
 require_once 'Piece/Unity/Plugin/Renderer/Flexy.php';
 require_once 'Piece/Unity/Config.php';

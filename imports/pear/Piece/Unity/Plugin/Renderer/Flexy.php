@@ -32,7 +32,7 @@
  * @subpackage Piece_Unity_Component_Flexy
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: Flexy.php 905 2007-07-15 15:30:01Z iteman $
+ * @version    SVN: $Id: Flexy.php 896 2007-07-15 10:26:03Z iteman $
  * @link       http://pear.php.net/package/HTML_Template_Flexy/
  * @since      File available since Release 1.0.0
  */

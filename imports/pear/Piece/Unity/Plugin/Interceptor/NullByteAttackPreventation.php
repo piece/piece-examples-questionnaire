@@ -32,7 +32,7 @@
  * @subpackage Piece_Unity_Component_NullByteAttackPreventation
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id: NullByteAttackPreventation.php 905 2007-07-15 15:30:01Z iteman $
+ * @version    SVN: $Id: NullByteAttackPreventation.php 899 2007-07-15 11:20:20Z iteman $
  * @since      File available since Release 1.0.0
  */
 
