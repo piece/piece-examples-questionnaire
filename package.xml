@@ -16,10 +16,10 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2007-07-16</date>
- <time>21:48:28</time>
+ <date>2007-07-19</date>
+ <time>19:40:38</time>
  <version>
-  <release>1.0.0</release>
+  <release>1.1.0</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -27,7 +27,18 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
   <api>stable</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>This is the first stable release of Piece_Examples_Questionnaire.</notes>
+ <notes>A new release of Piece_Examples_Questionnaire is now available.
+
+What&apos;s New in Piece_Examples_Questionnaire 1.1.0
+
+ * The New Naming Convention: All event names and event handler names are updated corresponding to the Piece_IDE compatible naming convention.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+- Updated corresponding to the Piece_IDE compatible naming convention.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="docs">
@@ -156,6 +167,30 @@ Piece_Examples_Questionnaire is a simple questionnaire application using wizard-
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2007-07-19</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Examples_Questionnaire is now available.
+
+What&apos;s New in Piece_Examples_Questionnaire 1.1.0
+
+ * The New Naming Convention: All event names and event handler names are updated corresponding to the Piece_IDE compatible naming convention.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+- Updated corresponding to the Piece_IDE compatible naming convention.</notes>
+  </release>
   <release>
    <version>
     <release>1.0.0</release>

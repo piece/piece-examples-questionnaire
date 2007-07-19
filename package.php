@@ -39,11 +39,22 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.0.0';
+$releaseVersion = '1.1.0';
 $releaseStability = 'stable';
 $apiVersion = '0.1.0';
 $apiStability = 'stable';
-$notes = 'This is the first stable release of Piece_Examples_Questionnaire.';
+$notes = 'A new release of Piece_Examples_Questionnaire is now available.
+
+What\'s New in Piece_Examples_Questionnaire 1.1.0
+
+ * The New Naming Convention: All event names and event handler names are updated corresponding to the Piece_IDE compatible naming convention.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+- Updated corresponding to the Piece_IDE compatible naming convention.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
