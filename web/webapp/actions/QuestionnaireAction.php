@@ -151,13 +151,7 @@ class QuestionnaireAction extends Piece_Unity_Service_FlowAction
     {
         $flexyElement = &new Piece_Unity_Service_FlexyElement();
         $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
-        $validation = &$this->_context->getValidation();
-        if ($validation->hasResults($validationSetName)) {
-            $results = &$validation->getResults($validationSetName);
-            foreach ($results->getFieldNames() as $field) {
-                $flexyElement->setValue($field, $this->_questionnaireAnswer->$field);
-            }
-        }
+        $flexyElement->restoreValues($validationSetName, $this->_questionnaireAnswer);
     }
 
     function _validate($validationSetName)
