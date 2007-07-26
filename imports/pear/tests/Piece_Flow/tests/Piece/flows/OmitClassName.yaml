@@ -1,7 +1,0 @@
-# $Id: OmitClassName.yaml 253 2006-11-13 14:06:28Z iteman $
-initial:
-  method: initialize
-firstState: DisplayForm
-viewState:
-  - name: DisplayForm
-    view: Form

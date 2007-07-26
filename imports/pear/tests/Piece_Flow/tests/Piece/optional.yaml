@@ -1,5 +1,0 @@
-# $Id: optional.yaml 215 2006-07-22 02:01:23Z iteman $
-firstState: foo
-viewState:
-  - name: foo
-    view: foo
