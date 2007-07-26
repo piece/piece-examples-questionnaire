@@ -1,5 +1,0 @@
-*~
-.svn
-cache_*
-sess_*
-/webapp/compiled-templates/*
